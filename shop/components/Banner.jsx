@@ -5,8 +5,8 @@ const Banner = () => {
   return (
     <div className="relative text-black text-[20px] w-full max-w-[1360px] mx-auto mt-3 ">
       <Carousel
-        autoPlay={true}
         infiniteLoop={true}
+        autoPlay={true}
         interval={2000}
         showThumbs={false}
         showIndicators={false}
