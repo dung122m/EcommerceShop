@@ -5,8 +5,8 @@ const Subhead = () => {
   const data = [
     { id: 1, name: "Find a store ", url: "/store" },
     { id: 2, name: "Help ", url: "/help" },
-    { id: 3, name: "Join us ", url: "/signup" },
-    { id: 4, name: "Sign in", url: "/signin" },
+    { id: 3, name: "Join us ", url: "/signin" },
+    { id: 4, name: "Sign in", url: "/login" },
   ];
   return (
     <div className="w-full flex justify-center md:justify-end mr-5 mt-2">

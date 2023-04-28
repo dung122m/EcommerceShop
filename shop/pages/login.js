@@ -5,10 +5,6 @@ import { useState } from "react";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const handlePhoneChange = (event) => {
-    setPhone(event.target.value);
-  };
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -19,17 +15,14 @@ export default function LoginPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(email, phone, password);
     try {
     } catch (error) {}
   };
-  const USER_REGEX = /^([a-zA-Z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
-  const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
   return (
     <div className="flex justify-center items-center h-screen bg-white">
       <Head>
-        <title>Sign Up</title>
+        <title>Log in </title>
       </Head>
       <form
         onSubmit={handleSubmit}
@@ -45,26 +38,8 @@ export default function LoginPage() {
         </div>
 
         <h2 className="text-2xl font-extrabold mb-6 text-center">
-          BECOME A NIKE MEMBER
+          YOUR ACCOUNT FOR EVERYTHING NIKE
         </h2>
-        <div className="text-sm text-black/[0.8] mb-6 text-center">
-          Create your Nike Member profile and get first access to the very best
-          of Nike products, inspiration and community.
-        </div>
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={phone}
-            onChange={handlePhoneChange}
-            placeholder="Your Phone Number"
-            className="w-full border border-gray-400 p-2 rounded-md"
-          />
-        </div>
         <div className="mb-4">
           <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
             Email:
@@ -97,20 +72,19 @@ export default function LoginPage() {
           />
         </div>
         <div className="text-center text-xs text-black/[0.7] m-5">
-          By creating an account, you agree to Nike's Privacy Policy and Terms
-          of Use.
+          By logging in, you agree to Nike's Privacy Policy and Terms of Use.
         </div>
         <button
           type="submit"
           className="w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold "
         >
-          JOIN US
+          SIGN IN
         </button>
 
         <div className="text-center text-sm text-black/[0.7] m-5">
-          Already a Member?
+          Not a member ?{" "}
           <span className="text-black underline">
-            <Link href="/login"> Sign In.</Link>
+            <Link href="/signin"> Join us</Link>
           </span>
         </div>
       </form>
