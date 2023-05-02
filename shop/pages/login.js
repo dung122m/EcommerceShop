@@ -20,7 +20,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-white">
+    <div className="flex justify-center items-center  bg-white">
       <Head>
         <title>Log in </title>
       </Head>

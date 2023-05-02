@@ -1,28 +1,29 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { React, useState, useRef, useEffect } from "react";
 import { AiOutlineCheck } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
 
 export default function Register() {
-  const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,24}$/;
+  const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{8,24}$/;
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const PHONE_REGEX = /^\+?[1-9]\d{1,14}$/;
+  const PHONE_REGEX = /^\+?\d{1,2}?\d{9}$/;
   const userRef = useRef();
+  const phoneRef = useRef();
   const errRef = useRef();
 
   const [user, setUser] = useState("");
   const [validName, setValidName] = useState(false);
-  const [userFocus, setUserFocus] = useState(false);
+
+  const [phone, setPhone] = useState("");
+  const [validPhone, setValidPhone] = useState(false);
 
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
-  const [pwdFocus, setPwdFocus] = useState(false);
-
-  const [matchPwd, setMatchPwd] = useState("");
-  const [validMatch, setValidMatch] = useState(false);
-  const [matchFocus, setMatchFocus] = useState(false);
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(user, phone);
+  };
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
   useEffect(() => {
@@ -30,39 +31,28 @@ export default function Register() {
   }, []);
 
   useEffect(() => {
-    const result = EMAIL_REGEX.test(user);
-    console.log(result);
-    console.log(user);
-    setValidName(result);
+    setValidName(EMAIL_REGEX.test(user));
   }, [user]);
-
   useEffect(() => {
-    const result = PWD_REGEX.test(pwd);
-    console.log(result);
-    console.log(pwd);
-    setValidPwd(result);
-    const match = pwd === matchPwd;
-    console.log(match);
-  }, [pwd, matchPwd]);
+    setValidPhone(PHONE_REGEX.test(phone));
+  }, [phone]);
+  useEffect(() => {
+    setValidPwd(PWD_REGEX.test(pwd));
+  }, [pwd]);
 
   useEffect(() => {
     setErrMsg("");
-  }, [user, pwd, matchPwd]);
+  }, [user, pwd, phone]);
   return (
-    <div className="flex justify-center items-center h-screen bg-white">
+    <div className="flex justify-center items-center  bg-white">
       <Head>
         <title>Sign Up</title>
       </Head>
-      <section>
-        <p
-          ref={errRef}
-          className={errMsg ? "errmsg" : "offscreen"}
-          aria-live="assertive"
-        >
-          {errMsg}
-        </p>
-      </section>
-      <form className="w-full max-w-md bg-white p-8 rounded-lg">
+
+      <form
+        className="w-full max-w-md bg-white p-8 rounded-lg"
+        onSubmit={handleSubmit}
+      >
         <div className="flex justify-center items-center">
           {" "}
           <img
@@ -85,11 +75,13 @@ export default function Register() {
             htmlFor="email"
             className=" text-gray-700 font-bold mb-2 flex items-center gap-2"
           >
-            Email :
-            <span className={validName ? "text-green-700" : "hidden"}>
+            Email:
+            <span className={validName ? "text-green-700 text-xl" : "hidden"}>
               <AiOutlineCheck />
             </span>
-            <span className={validName || !user ? "hidden" : "text-red-600"}>
+            <span
+              className={validName || !user ? "hidden" : "text-red-600 text-xl"}
+            >
               <FaTimes />
             </span>
           </label>
@@ -104,8 +96,6 @@ export default function Register() {
             aria-invalid={validName ? "false" : "true"}
             aria-describedby="uidnote"
             placeholder="Email address"
-            onFocus={() => setUserFocus(true)}
-            onBlur={() => setUserFocus(false)}
             className="w-full border border-gray-400 p-2 rounded-md"
           />
           <p
@@ -117,44 +107,91 @@ export default function Register() {
             Please enter a valid email address
           </p>
         </div>
-        {/* <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={phone}
-            onChange={handlePhoneChange}
-            placeholder="Your Phone Number"
-            className="w-full border border-gray-400 p-2 rounded-md"
-          />
-        </div> */}
+
         <div className="mb-4">
           <label
-            htmlFor="password"
-            className="block text-gray-700 font-bold mb-2"
+            htmlFor="phone"
+            className=" text-gray-700 font-bold mb-2 flex items-center gap-2"
           >
-            Password:
+            Phone Number
+            <span className={validPhone ? "text-green-700 text-xl" : "hidden"}>
+              <AiOutlineCheck />
+            </span>
+            <span
+              className={
+                validPhone || !phone ? "hidden" : "text-red-600 text-xl"
+              }
+            >
+              <FaTimes />
+            </span>
+          </label>
+          <input
+            type="text"
+            id="phone"
+            ref={phoneRef}
+            autoComplete="off"
+            name="phone"
+            onChange={(e) => setPhone(e.target.value)}
+            required
+            aria-invalid={validPhone ? "false" : "true"}
+            aria-describedby="uidnote"
+            placeholder="Phone Number"
+            className="w-full border border-gray-400 p-2 rounded-md"
+          />
+          <p
+            id="uidnote"
+            className={`${
+              validPhone || !phone ? "hidden" : "relative"
+            } text-red-400 mt-2 text-sm`}
+          >
+            Please enter a valid phone number
+          </p>
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="pwd"
+            className=" text-gray-700 font-bold mb-2 flex items-center gap-2"
+          >
+            Password
+            <span className={validPwd ? "text-green-700 text-xl" : "hidden"}>
+              <AiOutlineCheck />
+            </span>
+            <span
+              className={validPwd || !pwd ? "hidden" : "text-red-600 text-xl"}
+            >
+              <FaTimes />
+            </span>
           </label>
           <input
             type="password"
-            id="password"
-            name="password"
+            id="pwd"
+            ref={userRef}
+            autoComplete="off"
+            name="pwd"
             onChange={(e) => setPwd(e.target.value)}
+            required
+            aria-invalid={validPwd ? "false" : "true"}
+            aria-describedby="uidnote"
             placeholder="Password"
             className="w-full border border-gray-400 p-2 rounded-md"
           />
+          <p
+            id="uidnote"
+            className={`${
+              validPwd || !pwd ? "hidden" : "relative"
+            } text-red-400 mt-2 text-sm`}
+          >
+            Password must be at least 8 characters <br />
+            Including at least 1 number and 1 letter.
+          </p>
         </div>
         <div className="text-center text-xs text-black/[0.7] m-5">
           By creating an account, you agree to Nike's Privacy Policy and Terms
           of Use.
         </div>
-        <button
-          type="submit"
-          className="w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold "
-        >
+
+        <button className="w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold  ">
           JOIN US
         </button>
 
