@@ -5,7 +5,7 @@ const Subhead = () => {
   const data = [
     { id: 1, name: "Find a store ", url: "/store" },
     { id: 2, name: "Help ", url: "/help" },
-    { id: 3, name: "Join us ", url: "/signin" },
+    { id: 3, name: "Join us ", url: "/register" },
     { id: 4, name: "Sign in", url: "/login" },
   ];
   return (

@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
-
+import { fetchDataFromApi } from "@/utils/fetchDataFromApi";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -84,7 +84,7 @@ export default function LoginPage() {
         <div className="text-center text-sm text-black/[0.7] m-5">
           Not a member ?{" "}
           <span className="text-black underline">
-            <Link href="/signin"> Join us</Link>
+            <Link href="/register"> Join us</Link>
           </span>
         </div>
       </form>
