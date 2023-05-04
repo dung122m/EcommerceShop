@@ -1,31 +1,51 @@
+import ToastMessage from "@/components/ToastMessage";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { React, useState, useRef, useEffect } from "react";
 import { AiOutlineCheck } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
+import axios from "./api/axios";
 
-export default function Register() {
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+const Register = () => {
   const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{8,24}$/;
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const PHONE_REGEX = /^\+?\d{1,2}?\d{9}$/;
   const userRef = useRef();
   const phoneRef = useRef();
   const errRef = useRef();
-
+  const router = useRouter();
   const [user, setUser] = useState("");
   const [validName, setValidName] = useState(false);
-
   const [phone, setPhone] = useState("");
   const [validPhone, setValidPhone] = useState(false);
 
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
-  const handleSubmit = (e) => {
+  const [isReady, setIsReady] = useState(false);
+  const URL_REGISTER = "v2/auth/register";
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user, phone);
+    try {
+      const response = await axios.post(
+        URL_REGISTER,
+        JSON.stringify({ user, pwd }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+    setIsReady(true);
+    localStorage.setItem("isRegistered", "true"); // Lưu trạng thái đăng kí vào local storage
+    router.push("/login");
   };
-  const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
+
   useEffect(() => {
     userRef.current.focus();
   }, []);
@@ -33,18 +53,17 @@ export default function Register() {
   useEffect(() => {
     setValidName(EMAIL_REGEX.test(user));
   }, [user]);
+
   useEffect(() => {
     setValidPhone(PHONE_REGEX.test(phone));
   }, [phone]);
+
   useEffect(() => {
     setValidPwd(PWD_REGEX.test(pwd));
   }, [pwd]);
 
-  useEffect(() => {
-    setErrMsg("");
-  }, [user, pwd, phone]);
   return (
-    <div className="flex justify-center items-center  bg-white">
+    <div className="flex justify-center items-center bg-white">
       <Head>
         <title>Sign Up</title>
       </Head>
@@ -58,7 +77,7 @@ export default function Register() {
           <img
             src="https://i.pinimg.com/736x/8d/62/79/8d6279c04b35d101f029db1e2057a9b5.jpg"
             alt=""
-            className="w-[100px] "
+            className="w-[100px]"
           />
         </div>
 
@@ -191,7 +210,13 @@ export default function Register() {
           of Use.
         </div>
 
-        <button className="w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold  ">
+        <button
+          className={`${
+            !user || !pwd || !phone || !validName || !validPwd || !validPhone
+              ? "cursor-not-allowed opacity-50 w-full"
+              : " "
+          }" w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold  "`}
+        >
           JOIN US
         </button>
 
@@ -204,4 +229,5 @@ export default function Register() {
       </form>
     </div>
   );
-}
+};
+export default Register;

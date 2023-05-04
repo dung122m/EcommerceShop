@@ -1,7 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useState } from "react";
-import { fetchDataFromApi } from "@/utils/fetchDataFromApi";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "./api/axios"
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,7 +15,13 @@ export default function LoginPage() {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
-
+  useEffect(() => {
+    const isRegistered = localStorage.getItem("isRegistered");
+    if (isRegistered) {
+      localStorage.removeItem("isRegistered"); // Xóa trạng thái đăng kí khỏi local storage
+      toast.success("You have been registered successfully!");
+    }
+  }, []);
   const handleSubmit = (event) => {
     event.preventDefault();
     try {
@@ -88,6 +97,18 @@ export default function LoginPage() {
           </span>
         </div>
       </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
