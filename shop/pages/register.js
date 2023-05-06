@@ -28,22 +28,37 @@ const Register = () => {
   const URL_REGISTER = "v2/auth/register";
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        URL_REGISTER,
-        JSON.stringify({ user, pwd }),
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
+    const axios = require("axios");
+    let data = JSON.stringify({
+      phone_number: phone,
+      email: user,
+      password: pwd,
+    });
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:8080/api/v2/auth/register",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        if (response.data.status === 201) {
+          setIsReady(true);
+          localStorage.setItem("isRegistered", "true"); // Lưu trạng thái đăng kí vào local storage
+          router.push("/login");
         }
-      );
-      console.log(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-    setIsReady(true);
-    localStorage.setItem("isRegistered", "true"); // Lưu trạng thái đăng kí vào local storage
-    router.push("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.response.data.error);
+      });
   };
 
   useEffect(() => {
@@ -67,7 +82,18 @@ const Register = () => {
       <Head>
         <title>Sign Up</title>
       </Head>
-
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <form
         className="w-full max-w-md bg-white p-8 rounded-lg"
         onSubmit={handleSubmit}
