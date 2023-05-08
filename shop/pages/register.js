@@ -1,12 +1,9 @@
-import ToastMessage from "@/components/ToastMessage";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { React, useState, useRef, useEffect } from "react";
 import { AiOutlineCheck } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
-import axios from "./api/axios";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Register = () => {
@@ -15,17 +12,13 @@ const Register = () => {
   const PHONE_REGEX = /^\+?\d{1,2}?\d{9}$/;
   const userRef = useRef();
   const phoneRef = useRef();
-  const errRef = useRef();
   const router = useRouter();
   const [user, setUser] = useState("");
   const [validName, setValidName] = useState(false);
   const [phone, setPhone] = useState("");
   const [validPhone, setValidPhone] = useState(false);
-
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
-  const [isReady, setIsReady] = useState(false);
-  const URL_REGISTER = "v2/auth/register";
   const handleSubmit = async (e) => {
     e.preventDefault();
     const axios = require("axios");
@@ -57,7 +50,9 @@ const Register = () => {
       })
       .catch((error) => {
         console.log(error);
-        toast.error(error.response.data.error);
+        if (error) {
+          toast.error(error.response.data.error);
+        }
       });
   };
 

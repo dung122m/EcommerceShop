@@ -1,17 +1,26 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "./api/axios"
+import { AiOutlineCheck } from "react-icons/ai";
+import { FaTimes } from "react-icons/fa";
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
-
+  const [validPwd, setValidPwd] = useState(false);
+  const [validName, setValidName] = useState(false);
+  const userRef = useRef();
+  const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{8,24}$/;
+  const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const PHONE_REGEX = /^\+?\d{1,2}?\d{9}$/;
+  const router = useRouter();
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
@@ -22,11 +31,49 @@ export default function LoginPage() {
       toast.success("You have been registered successfully!");
     }
   }, []);
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    try {
-    } catch (error) {}
-  };
+  useEffect(() => {
+    setValidPwd(PWD_REGEX.test(password));
+  }, [password]);
+  useEffect(() => {
+    setValidName(EMAIL_REGEX.test(email));
+  }, [email]);
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const axios = require("axios");
+    let data = JSON.stringify({
+      email: email,
+      password: password,
+    });
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:8080/api/v2/auth/login",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        const accessToken = response?.data?.data?.access_token;
+        Cookies.set("access_token", accessToken, { expires: 7 });
+        console.log(JSON.stringify(response?.data));
+
+        toast.success("Login successful");
+        // setTimeout(() => {
+        //   router.push("/");
+        // }, 3000);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error?.response?.data?.message)
+          toast.error(error?.response?.data?.message);
+        else toast.error(error?.response?.data?.error);
+      });
+  }
 
   return (
     <div className="flex justify-center items-center  bg-white">
@@ -50,42 +97,93 @@ export default function LoginPage() {
           YOUR ACCOUNT FOR EVERYTHING NIKE
         </h2>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="email"
+            className=" text-gray-700 font-bold mb-2 flex items-center gap-2"
+          >
             Email:
+            <span className={validName ? "text-green-700 text-xl" : "hidden"}>
+              <AiOutlineCheck />
+            </span>
+            <span
+              className={
+                validName || !email ? "hidden" : "text-red-600 text-xl"
+              }
+            >
+              <FaTimes />
+            </span>
           </label>
           <input
-            type="email"
+            type="text"
             id="email"
+            ref={userRef}
+            autoComplete="off"
             name="email"
-            value={email}
-            onChange={handleEmailChange}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            aria-invalid={validName ? "false" : "true"}
+            aria-describedby="uidnote"
             placeholder="Email address"
             className="w-full border border-gray-400 p-2 rounded-md"
           />
+          <p
+            id="uidnote"
+            className={`${
+              validName || !email ? "hidden" : "relative"
+            } text-red-400 mt-2 text-sm`}
+          >
+            Please enter a valid email address
+          </p>
         </div>
         <div className="mb-4">
           <label
-            htmlFor="password"
-            className="block text-gray-700 font-bold mb-2"
+            htmlFor="pwd"
+            className=" text-gray-700 font-bold mb-2 flex items-center gap-2"
           >
-            Password:
+            Password
+            <span className={validPwd ? "text-green-700 text-xl" : "hidden"}>
+              <AiOutlineCheck />
+            </span>
+            <span
+              className={
+                validPwd || !password ? "hidden" : "text-red-600 text-xl"
+              }
+            >
+              <FaTimes />
+            </span>
           </label>
           <input
             type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={handlePasswordChange}
+            id="pwd"
+            ref={userRef}
+            autoComplete="off"
+            name="pwd"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            aria-invalid={validPwd ? "false" : "true"}
+            aria-describedby="uidnote"
             placeholder="Password"
             className="w-full border border-gray-400 p-2 rounded-md"
           />
+          <p
+            id="uidnote"
+            className={`${
+              validPwd || !password ? "hidden" : "relative"
+            } text-red-400 mt-2 text-sm`}
+          >
+            Password must be at least 8 characters <br />
+            Including at least 1 number and 1 letter.
+          </p>
         </div>
         <div className="text-center text-xs text-black/[0.7] m-5">
           By logging in, you agree to Nike's Privacy Policy and Terms of Use.
         </div>
         <button
-          type="submit"
-          className="w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold "
+          className={`${
+            !email || !password || !validName || !validPwd
+              ? "cursor-not-allowed opacity-50 w-full"
+              : " "
+          }" w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold  "`}
         >
           SIGN IN
         </button>
