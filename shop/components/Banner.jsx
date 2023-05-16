@@ -3,7 +3,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from "react-responsive-carousel";
 const Banner = () => {
   return (
-    <div className="relative text-black text-[20px] w-full max-w-[1360px] mx-auto mt-3 ">
+    <div className="relative text-black text-[20px] w-full mt-3 ">
       <Carousel
         infiniteLoop={true}
         autoPlay={true}

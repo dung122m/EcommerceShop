@@ -2,8 +2,10 @@ import Head from "next/head";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import "@/styles/globals.css";
+import { UserProvider } from "@/utils/UserContext";
+import Cookies from "js-cookie";
 
-export default function App({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   return (
     <>
       <Head>
@@ -22,9 +24,12 @@ export default function App({ Component, pageProps }) {
           rel="stylesheet"
         />
       </Head>
-      <Header />
-      <Component {...pageProps} />
-      <Footer />
+      <UserProvider>
+        <Header />
+        <Component {...pageProps} />
+        <Footer />
+      </UserProvider>
     </>
   );
 }
+export default App;

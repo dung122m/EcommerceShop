@@ -1,24 +1,78 @@
+import UserContext from "@/utils/UserContext";
+import Cookies from "js-cookie";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from "react";
 
 const Subhead = () => {
-  const data = [
-    { id: 1, name: "Find a store ", url: "/store" },
-    { id: 2, name: "Help ", url: "/help" },
-    { id: 3, name: "Join us ", url: "/register" },
-    { id: 4, name: "Sign in", url: "/login" },
-  ];
+  const { userInfo } = useContext(UserContext);
+  const [isLoggedIn, setisLoggedIn] = useState(false);
+  const [email, setEmail] = useState("");
+  useEffect(() => {
+    // Perform localStorage action
+    const accessToken = localStorage.getItem("access_token");
+    const storedEmail = localStorage.getItem("email");
+    if (accessToken) {
+      setisLoggedIn(true);
+      setEmail(storedEmail);
+    } else {
+      setisLoggedIn(false);
+    }
+  }, []);
+  const router = useRouter();
+
+  function logout() {
+    localStorage.removeItem("access_token");
+    setisLoggedIn(false);
+
+    router.push("/");
+  }
+
   return (
-    <div className="w-full flex justify-center md:justify-end mr-5 mt-2">
-      <ul className="flex gap-5  text-xs items-end font-medium ">
-        {data.map((item) => (
-          <Link href={item.url}>
-            <li className="hover:text-orange-600" key={item.id}>
-              {item.name}
-            </li>
-          </Link>
-        ))}
-      </ul>
+    <div className="w-full flex justify-center md:justify-end mb-2 mr-2 text-lg ">
+      {isLoggedIn ? (
+        <div className="">
+          <ul className="flex gap-5  text-xs items-end font-medium ">
+            <Link href="/store">
+              <li className="hover:text-orange-600">Find a store</li>
+            </Link>
+            <Link href="/help">
+              <li className="hover:text-orange-600">Help</li>
+            </Link>
+
+            <div className="flex gap-5 hover:cursor-pointer">
+              <span>{email}</span>
+
+              <li
+                className="hover:text-orange-600 hover:cursor-pointer text-red-600"
+                onClick={logout}
+              >
+                Log out
+              </li>
+            </div>
+          </ul>
+        </div>
+      ) : (
+        <div className="w-full flex justify-center md:justify-end mr-5 mt-2">
+          <ul className="flex gap-5  text-xs items-end font-medium ">
+            <Link href="/store">
+              <li className="hover:text-orange-600">Find a store</li>
+            </Link>
+            <Link href="/help">
+              <li className="hover:text-orange-600">Help</li>
+            </Link>
+
+            <div className="flex gap-5">
+              <Link href="/register">
+                <li className="hover:text-orange-600">Join us</li>
+              </Link>
+              <Link href="/login">
+                <li className="hover:text-orange-600">Sign in</li>
+              </Link>
+            </div>
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

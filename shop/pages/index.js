@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   return (
     <>
-      <main className="">
+      <main>
         <Banner />
         <Wrapper>
           <div className="text-center max-w-[800px] mx-auto  my-[20px] md:my-[50px]">

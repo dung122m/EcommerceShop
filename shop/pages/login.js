@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import React, { useContext } from "react";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
@@ -7,7 +8,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineCheck } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
-
+import axios from "./api/axios";
+import UserContext from "@/utils/UserContext";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +23,7 @@ export default function LoginPage() {
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const PHONE_REGEX = /^\+?\d{1,2}?\d{9}$/;
   const router = useRouter();
+  const { updateUser, updateAccessToken } = useContext(UserContext);
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
@@ -39,40 +42,31 @@ export default function LoginPage() {
   }, [email]);
   async function handleSubmit(e) {
     e.preventDefault();
-    const axios = require("axios");
+
     let data = JSON.stringify({
       email: email,
       password: password,
     });
 
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "http://localhost:8080/api/v2/auth/login",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
+    try {
+      const response = await axios.post("/auth/login", data); // Gọi API đăng nhập
+      updateUser({ email: response?.data?.data?.user?.email });
+      const accessToken = response?.data?.data?.access_token;
 
-    axios
-      .request(config)
-      .then((response) => {
-        const accessToken = response?.data?.data?.access_token;
-        Cookies.set("access_token", accessToken, { expires: 7 });
-        console.log(JSON.stringify(response?.data));
-
-        toast.success("Login successful");
-        // setTimeout(() => {
-        //   router.push("/");
-        // }, 3000);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error?.response?.data?.message)
-          toast.error(error?.response?.data?.message);
-        else toast.error(error?.response?.data?.error);
-      });
+      localStorage.setItem("access_token", accessToken);
+      localStorage.setItem("email", response?.data?.data?.user?.email);
+      updateAccessToken(localStorage.getItem("access_token"));
+      toast.success("Login successful");
+      setTimeout(() => {
+        router.push("/");
+        window.location.href = "/";
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+      if (error?.response?.data?.message)
+        toast.error(error?.response?.data?.message);
+      else toast.error(error?.response?.data?.error);
+    }
   }
 
   return (
@@ -183,7 +177,7 @@ export default function LoginPage() {
             !email || !password || !validName || !validPwd
               ? "cursor-not-allowed opacity-50 w-full"
               : " "
-          }" w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold  "`}
+          }" w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold active:scale-95  hover:opacity-75 transition-transform "`}
         >
           SIGN IN
         </button>

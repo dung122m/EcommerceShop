@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Wrapper from "./Wrapper";
 import Link from "next/link";
 import Menu from "./Menu";
@@ -47,9 +47,9 @@ const Header = () => {
     <header
       className={`w-full bg-white flex items-center justify-center z-20 sticky top-0 transition-transform duration-300 ${show} flex-col`}
     >
-      <Subhead />
+      {<Subhead />}
       <Wrapper>
-        <div className="flex flex-col lg:flex-row md:gap-10 gap-2 justify-between">
+        <div className=" flex flex-col lg:flex-row md:gap-10 gap-2 justify-between">
           <Link href="/" className="flex justify-center flex-col items-center">
             <img
               src="https://i.pinimg.com/736x/8d/62/79/8d6279c04b35d101f029db1e2057a9b5.jpg"

@@ -6,6 +6,7 @@ import { AiOutlineCheck } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "./api/axios";
 const Register = () => {
   const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{8,24}$/;
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -21,39 +22,28 @@ const Register = () => {
   const [validPwd, setValidPwd] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const axios = require("axios");
+
     let data = JSON.stringify({
       phone_number: phone,
       email: user,
       password: pwd,
     });
 
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "http://localhost:8080/api/v2/auth/register",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
+    try {
+      const response = await axios.post("/auth/register", data); // Gọi API đăng ký
 
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        if (response.data.status === 201) {
-          setIsReady(true);
-          localStorage.setItem("isRegistered", "true"); // Lưu trạng thái đăng kí vào local storage
-          router.push("/login");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error) {
-          toast.error(error.response.data.error);
-        }
-      });
+      console.log(JSON.stringify(response?.data));
+      if (response.data.status === 201) {
+        setIsReady(true);
+        localStorage.setItem("isRegistered", "true");
+        router.push("/login");
+      }
+    } catch (error) {
+      console.log(error);
+      if (error) {
+        toast.error(error?.response?.data?.error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -236,7 +226,7 @@ const Register = () => {
             !user || !pwd || !phone || !validName || !validPwd || !validPhone
               ? "cursor-not-allowed opacity-50 w-full"
               : " "
-          }" w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold  "`}
+          }" w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold active:scale-95  hover:opacity-75 transition-transform "`}
         >
           JOIN US
         </button>
