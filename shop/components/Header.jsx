@@ -21,7 +21,7 @@ const Header = () => {
     if (window.innerWidth > 1024) {
       if (window.scrollY > 200) {
         if (scrollY > lastScrollY && !mobileMenu) {
-          setShow("-translate-y-[62px]");
+          setShow("-translate-y-[85px]");
         } else {
           setShow("shadow-sm");
         }

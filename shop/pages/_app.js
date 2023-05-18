@@ -4,7 +4,8 @@ import Header from "@/components/Header";
 import "@/styles/globals.css";
 import { UserProvider } from "@/utils/UserContext";
 import Cookies from "js-cookie";
-
+import { Provider } from "react-redux";
+import store from "@/store/store";
 function App({ Component, pageProps }) {
   return (
     <>
@@ -24,11 +25,13 @@ function App({ Component, pageProps }) {
           rel="stylesheet"
         />
       </Head>
-      <UserProvider>
-        <Header />
-        <Component {...pageProps} />
-        <Footer />
-      </UserProvider>
+      <Provider store={store}>
+        <UserProvider>
+          <Header />
+          <Component {...pageProps} />
+          <Footer />
+        </UserProvider>
+      </Provider>
     </>
   );
 }

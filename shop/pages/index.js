@@ -2,11 +2,28 @@ import Banner from "@/components/Banner";
 import ProductCard from "@/components/ProductCard";
 import RelatedProducts from "@/components/RelatedProducts";
 import Wrapper from "@/components/Wrapper";
+
 import { Inter } from "@next/font/google";
+import axios from "./api/axios";
+import { useEffect, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get("/categories");
+        setData(data);
+        console.log(data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
       <main>

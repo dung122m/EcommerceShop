@@ -21,9 +21,7 @@ export default function LoginPage() {
   const userRef = useRef();
   const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{8,24}$/;
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const PHONE_REGEX = /^\+?\d{1,2}?\d{9}$/;
   const router = useRouter();
-  const { updateUser, updateAccessToken } = useContext(UserContext);
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
@@ -31,7 +29,6 @@ export default function LoginPage() {
     const isRegistered = localStorage.getItem("isRegistered");
     if (isRegistered) {
       localStorage.removeItem("isRegistered"); // Xóa trạng thái đăng kí khỏi local storage
-      toast.success("You have been registered successfully!");
     }
   }, []);
   useEffect(() => {
@@ -50,12 +47,9 @@ export default function LoginPage() {
 
     try {
       const response = await axios.post("/auth/login", data); // Gọi API đăng nhập
-      updateUser({ email: response?.data?.data?.user?.email });
       const accessToken = response?.data?.data?.access_token;
-
       localStorage.setItem("access_token", accessToken);
       localStorage.setItem("email", response?.data?.data?.user?.email);
-      updateAccessToken(localStorage.getItem("access_token"));
       toast.success("Login successful");
       setTimeout(() => {
         router.push("/");

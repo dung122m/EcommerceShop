@@ -1,11 +1,9 @@
-import UserContext from "@/utils/UserContext";
-import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Subhead = () => {
-  const { userInfo } = useContext(UserContext);
   const [isLoggedIn, setisLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   useEffect(() => {
@@ -25,11 +23,14 @@ const Subhead = () => {
     localStorage.removeItem("access_token");
     setisLoggedIn(false);
 
-    router.push("/");
+    setTimeout(() => {
+      router.push("/");
+      window.location.href = "/";
+    }, 1000);
   }
 
   return (
-    <div className="w-full flex justify-center md:justify-end mb-2 mr-2 text-lg ">
+    <div className="w-full flex justify-center md:justify-end  mr-2 pt-2 text-lg ">
       {isLoggedIn ? (
         <div className="">
           <ul className="flex gap-5  text-xs items-end font-medium ">

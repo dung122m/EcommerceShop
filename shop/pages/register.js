@@ -34,7 +34,7 @@ const Register = () => {
 
       console.log(JSON.stringify(response?.data));
       if (response.data.status === 201) {
-        setIsReady(true);
+        toast.success("You have been registered successfully!");
         localStorage.setItem("isRegistered", "true");
         router.push("/login");
       }
