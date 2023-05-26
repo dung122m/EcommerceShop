@@ -1,18 +1,28 @@
 import React from "react";
 import Link from "next/link";
-const ProductCard = () => {
+import Image from "next/image";
+import { getDiscountedPricePercentage } from "@/utils/helper";
+const ProductCard = ({ data }) => {
+  console.log(data);
   return (
-    <Link href="/product/1">
-      <img
-        src="/product-1.webp"
-        alt=""
-        className="w-full transform overflow-hidden bg-white duration-200 hover:scale-105 cursor-pointer"
-      />
-      <div className="p-4 text-black/[0.9]">Product Name</div>
+    <Link href={`/product/${data?.name.replace(/\s+/g, "-")}`}>
+      <img src={data?.main_image} alt="" height={500} width={500} />
+      <div className="p-4 text-black/[0.9]">{data?.name}</div>
       <div className="flex items-center text-black/[0.5]">
-        <p className="ml-2 mr-4 text-lg font-semibold "> $20</p>
-        <p className="text-base font-medium line-through">$25</p>
-        <p className="ml-auto text-base font-medium text-green-500"> 20% off</p>
+        <p className="ml-2 mr-4 text-lg font-semibold ">
+          {" "}
+          {data?.current_price.toLocaleString("vi-VN")}
+        </p>
+        <p className="text-base font-medium line-through">
+          {data?.original_price.toLocaleString("vi-VN")}
+        </p>
+        <p className="ml-auto text-base font-medium text-green-500">
+          {getDiscountedPricePercentage(
+            data?.original_price,
+            data?.current_price
+          )}{" "}
+          %
+        </p>
       </div>
     </Link>
   );

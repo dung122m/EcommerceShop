@@ -15,9 +15,7 @@ const Banner = () => {
         <div className="aspect-[16/10] md:aspect-auto object-cover">
           <img src="/slide2.jpg" />
         </div>
-        <div>
-          <img src="/slide1.jpg" />
-        </div>
+
         <div>
           <img src="/slide3.jpg" />
         </div>

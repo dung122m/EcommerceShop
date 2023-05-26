@@ -31,13 +31,8 @@ const Register = () => {
 
     try {
       const response = await axios.post("/auth/register", data); // Gọi API đăng ký
-
-      console.log(JSON.stringify(response?.data));
-      if (response.data.status === 201) {
-        toast.success("You have been registered successfully!");
-        localStorage.setItem("isRegistered", "true");
-        router.push("/login");
-      }
+      toast.success(response?.data.status);
+      router.push("/login");
     } catch (error) {
       console.log(error);
       if (error) {
@@ -64,9 +59,6 @@ const Register = () => {
 
   return (
     <div className="flex justify-center items-center bg-white">
-      <Head>
-        <title>Sign Up</title>
-      </Head>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -79,6 +71,10 @@ const Register = () => {
         pauseOnHover
         theme="light"
       />
+      <Head>
+        <title>Sign Up</title>
+      </Head>
+
       <form
         className="w-full max-w-md bg-white p-8 rounded-lg"
         onSubmit={handleSubmit}

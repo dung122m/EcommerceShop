@@ -6,5 +6,5 @@ export const getDiscountedPricePercentage = (
 
   const discountPercentage = (discount / originalPrice) * 100;
 
-  return discountPercentage.toFixed(0);
+  return discountPercentage.toFixed(2);
 };

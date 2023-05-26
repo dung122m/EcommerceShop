@@ -5,29 +5,22 @@ import Wrapper from "@/components/Wrapper";
 
 import { Inter } from "@next/font/google";
 import axios from "./api/axios";
-import { useEffect, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
-  const [data, setData] = useState(null);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get("/categories");
-        setData(data);
-        console.log(data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+export default function Home({ products }) {
   return (
     <>
       <main>
         <Banner />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-14 px-5 md:px-0">
+          {" "}
+          {products.data.records.map((product) => (
+            <ProductCard key={product.id} data={product} />
+          ))}
+        </div>
+        {console.log(products.data.records)}
+
         <Wrapper>
           <div className="text-center max-w-[800px] mx-auto  my-[20px] md:my-[50px]">
             <div className="text-[40px]  mb-5 font-semibold leading-tight">
@@ -43,4 +36,12 @@ export default function Home() {
       </main>
     </>
   );
+}
+export async function getStaticProps() {
+  const response = await axios.get("/products");
+  return {
+    props: {
+      products: response.data,
+    },
+  };
 }

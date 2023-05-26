@@ -26,12 +26,6 @@ export default function LoginPage() {
     setPassword(event.target.value);
   };
   useEffect(() => {
-    const isRegistered = localStorage.getItem("isRegistered");
-    if (isRegistered) {
-      localStorage.removeItem("isRegistered"); // Xóa trạng thái đăng kí khỏi local storage
-    }
-  }, []);
-  useEffect(() => {
     setValidPwd(PWD_REGEX.test(password));
   }, [password]);
   useEffect(() => {
@@ -66,7 +60,7 @@ export default function LoginPage() {
   return (
     <div className="flex justify-center items-center  bg-white">
       <Head>
-        <title>Log in </title>
+        <title>Sign in </title>
       </Head>
       <form
         onSubmit={handleSubmit}
