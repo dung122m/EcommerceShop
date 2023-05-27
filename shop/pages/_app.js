@@ -6,7 +6,13 @@ import { UserProvider } from "@/utils/UserContext";
 import Cookies from "js-cookie";
 import { Provider } from "react-redux";
 import store from "@/store/store";
-function App({ Component, pageProps }) {
+function App({ Component, pageProps, router }) {
+  const isAdmin = router.pathname.startsWith("/admin");
+
+  if (isAdmin) {
+    // Trang admin
+    return <Component {...pageProps} />;
+  }
   return (
     <>
       <Head>

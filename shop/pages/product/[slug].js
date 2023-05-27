@@ -4,7 +4,9 @@ import Wrapper from "@/components/Wrapper";
 import ProductDetailCarousel from "@/components/ProductDetailCarousel";
 import RelatedProducts from "@/components/RelatedProducts";
 import Head from "next/head";
+import { useSelector, useDispatch } from "react-redux";
 const ProductDetails = () => {
+  const dispatch = useDispatch();
   return (
     <div className="w-full md:py-5 ">
       <Head>
