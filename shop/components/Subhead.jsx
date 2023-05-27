@@ -22,11 +22,7 @@ const Subhead = () => {
   function logout() {
     localStorage.removeItem("access_token");
     setisLoggedIn(false);
-
-    setTimeout(() => {
-      router.push("/");
-      window.location.href = "/";
-    }, 1000);
+    router.push("/");
   }
 
   return (

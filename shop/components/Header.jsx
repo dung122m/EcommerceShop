@@ -9,14 +9,15 @@ import { VscChromeClose } from "react-icons/vsc";
 import { AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
 import Subhead from "./Subhead";
 import MenuMobile from "./MenuMobile";
+import axios from "../pages/api/axios";
+
 const Header = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [select, setSelect] = useState(null);
   const [show, setShow] = useState("translate-y-0");
-  const [showMenu, setShowMenu] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [homeClicked, setHomeClicked] = useState(false);
-
+  const [showCatMenu, setShowCatMenu] = useState(false);
+  const [categories, setCategories] = useState(null);
   const controlNav = () => {
     if (window.innerWidth > 1024) {
       if (window.scrollY > 200) {
@@ -43,6 +44,13 @@ const Header = () => {
       window.removeEventListener("scroll", controlNav);
     };
   }, [lastScrollY]);
+  const getCategory = async () => {
+    const { data } = await axios.get("/categories");
+    setCategories(data?.data?.records);
+  };
+  useEffect(() => {
+    getCategory();
+  }, []);
   return (
     <header
       className={`w-full bg-white flex items-center justify-center z-20 sticky top-0 transition-transform duration-300 ${show} flex-col`}
@@ -55,14 +63,23 @@ const Header = () => {
               src="https://i.pinimg.com/736x/8d/62/79/8d6279c04b35d101f029db1e2057a9b5.jpg"
               alt=""
               className="w-[60px]"
-              onClick={() => {
-                setHomeClicked(true);
-              }}
             />
           </Link>
           <div className="flex items-center justify-between text-center lg:gap-20 flex-col lg:flex-row ">
-            <Menu homeClicked={homeClicked} />
-            {mobileMenu && <MenuMobile setMobileMenu={setMobileMenu} />}
+            <Menu
+              showCatMenu={showCatMenu}
+              setShowCatMenu={setShowCatMenu}
+              categories={categories}
+            />
+
+            {mobileMenu && (
+              <MenuMobile
+                setMobileMenu={setMobileMenu}
+                showCatMenu={showCatMenu}
+                setShowCatMenu={setShowCatMenu}
+                categories={categories}
+              />
+            )}
 
             <div className="flex items-center justify-center mx-2 md:mx-0 gap-4 text-black  ">
               <div>

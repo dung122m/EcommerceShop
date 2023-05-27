@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { getDiscountedPricePercentage } from "@/utils/helper";
 const ProductCard = ({ data }) => {
-  console.log(data);
   return (
     <Link href={`/product/${data?.name.replace(/\s+/g, "-")}`}>
       <img src={data?.main_image} alt="" height={500} width={500} />
