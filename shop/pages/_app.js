@@ -7,7 +7,9 @@ import Cookies from "js-cookie";
 import { Provider } from "react-redux";
 import store from "@/store/store";
 function App({ Component, pageProps, router }) {
-  const isAdmin = router.pathname.startsWith("/admin");
+  const isAdmin = router.pathname.startsWith(
+    "/admin" || "/products" || "settings" || "orders"
+  );
 
   if (isAdmin) {
     // Trang admin
