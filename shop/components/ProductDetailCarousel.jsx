@@ -3,7 +3,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from "react-responsive-carousel";
 
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
-const ProductDetailCarousel = () => {
+const ProductDetailCarousel = ({ productData }) => {
   return (
     <div className="text-white text-[12px] w-full max-w-[1360px] py-2 mx-auto sticky top-[50px]">
       <Carousel
@@ -30,13 +30,11 @@ const ProductDetailCarousel = () => {
         )}
         className="productCarousel"
       >
-        <img src="/p1.png" alt="" />
-        <img src="/p2.png" alt="" />
-        <img src="/p3.png" alt="" />
-        <img src="/p4.png" alt="" />
-        <img src="/p5.png" alt="" />
-        <img src="/p6.png" alt="" />
-        <img src="/p7.png" alt="" />
+        <img src={productData?.data?.records?.product?.main_image} alt="" />
+
+        {productData?.data?.records?.product?.sub_images.map((img) => (
+          <img src={img} key={img} />
+        ))}
       </Carousel>
     </div>
   );

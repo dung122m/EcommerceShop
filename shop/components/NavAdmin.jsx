@@ -18,7 +18,7 @@ const NavAdmin = () => {
     <aside className=" p-4 text-white pr-0">
       <Link
         href="/admin"
-        className="flex gap-2 mb-4 font-bold text-lg items-center text-yellow-300 mr-20 "
+        className="flex gap-2 mb-4 font-bold text-lg items-center  text-yellow-300 mr-32 "
       >
         <RiAdminFill size={20} />
         <span>ADMIN </span>
