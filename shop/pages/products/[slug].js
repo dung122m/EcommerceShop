@@ -120,7 +120,7 @@ const ProductDetails = ({ productData }) => {
                 } else {
                   dispatch(
                     addToCart({
-                      ...productData?.data?.records?.product,
+                      ...productData?.data?.records,
                       selectedSize,
                       oneQuantityPrice: p?.current_price,
                     })

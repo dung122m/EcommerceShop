@@ -1,46 +1,78 @@
+import Link from "next/link";
 import React from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
-const CartItem = () => {
+import { updateCart } from "@/store/cartSlice";
+const CartItem = ({ data }) => {
+  const mutableArr = [...data.variants];
+  const updateCartItem = (e, key) => {
+    let payload = {
+      key,
+      val: key === "quantity" ? parseInt(e.target.value) : e.target.value,
+    };
+  };
+
   return (
     <div className="flex py-5 gap-3 md:gap-5 border-b">
       {/* image start */}
 
       <div className="shrink-0 aspect-square w-[50px] md:w-[120px] ">
-        <img src="product-1.webp" alt="" />
+        <Link href={`/products/${data.product.id}`}>
+          <img src={data.product.main_image} alt="" />
+        </Link>
       </div>
       {/* image end */}
       <div className="w-full flex flex-col">
         <div className="flex flex-col justify-between">
           {/* product title */}
-          <div className="text-lg  font-semibold text-black/[0.8]">
-            Jordan 6 Retro
+          <Link href={`/products/${data.product.id}`}>
+            <div className="text-lg  font-semibold text-black/[0.8]">
+              {data.product.name}
+            </div>
+          </Link>
+          <div className="text-sm md:text-md font-medium text-black/[0.5] block ">
+            {data?.product.Categories[1]?.name
+              ? data.product?.Categories[1]?.name
+              : data.product?.Categories[0]?.name}
           </div>
           {/* product subtittle */}
-          <div className="text-sm font-medium text-black/[0.5] mb-1">
-            Men&apos;s Shoes
-          </div>
 
           {/* product color */}
-          <div className="text-sm font-medium text-black/[0.5] ">
-            Black/White
-          </div>
 
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-3  text-black/[0.5]">
               <div className="flex items-center gap-1">
                 <div className="font-semibold">Size</div>
-                <select className="hover:text-black">
-                  <option value="1">36</option>
-                  <option value="2">37</option>
-                  <option value="3">38</option>
-                  <option value="4">39</option>
-                  <option value="5">40</option>
-                  <option value="6">41</option>
+                <select
+                  className="hover:text-black"
+                  onChange={(e) => {
+                    updateCartItem(e, "selectedSize");
+                  }}
+                >
+                  {mutableArr.reverse().map((size, i) => (
+                    <option
+                      value={size.size}
+                      key={i}
+                      selected={data?.selectedSize === size.size}
+                    >
+                      {size.size}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="font-semibold">Quantity</div>
               <select className="hover:text-black">
-                <option value="1">1</option>
+                {Array.from({ length: 10 }, (_, i) => i + 1).map((q, i) => (
+                  <option
+                    index={i}
+                    value={q}
+                    selected={data.quantity === q}
+                    onChange={(e) => {
+                      updateCartItem(e, "quantity");
+                    }}
+                  >
+                    {q}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -48,7 +80,9 @@ const CartItem = () => {
         </div>
       </div>
       {/* product price */}
-      <div className="font-semibold">3.290.000đ</div>
+      <div className="font-semibold">
+        {data.product.current_price.toLocaleString("vi-VN") + " VND"}
+      </div>
     </div>
   );
 };
