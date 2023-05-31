@@ -10,10 +10,10 @@ const ProductCard = ({ data }) => {
       <div className="flex items-center text-black/[0.5]">
         <p className="ml-2 mr-4 text-lg font-semibold ">
           {" "}
-          {data?.current_price.toLocaleString("vi-VN") + " đ"}
+          {data?.current_price.toLocaleString("vi-VN") + " VND"}
         </p>
         <p className="text-sm font-medium line-through">
-          {data?.original_price.toLocaleString("vi-VN") + " đ"}
+          {data?.original_price.toLocaleString("vi-VN") + " VND"}
         </p>
         <p className="ml-auto text-base font-medium text-green-500">
           {getDiscountedPricePercentage(

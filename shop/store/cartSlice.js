@@ -6,7 +6,15 @@ export const cartSlice = createSlice({
     cartItems: [],
   },
   reducers: {
-    addToCart: (state, action) => {},
+    addToCart: (state, action) => {
+      const item = state.cartItems.find((p) => p.id === action.payload.id);
+      if (item) {
+        item.quantity++;
+        item.current_price = item.oneQuantityPrice * item.quantity;
+      } else {
+        state.cartItems.push({ ...action.payload, quantity: 1 });
+      }
+    },
   },
 });
 

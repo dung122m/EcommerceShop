@@ -10,7 +10,7 @@ import { AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
 import Subhead from "./Subhead";
 import MenuMobile from "./MenuMobile";
 import axios from "../pages/api/axios";
-
+import { useSelector } from "react-redux";
 const Header = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [select, setSelect] = useState(null);
@@ -18,6 +18,7 @@ const Header = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showCatMenu, setShowCatMenu] = useState(false);
   const [categories, setCategories] = useState(null);
+  const { cartItems } = useSelector((state) => state.cart);
   const controlNav = () => {
     if (window.innerWidth > 1024) {
       if (window.scrollY > 200) {
@@ -99,12 +100,14 @@ const Header = () => {
                 </div>
               </div>
               <Link href="/cart">
-                <div className="w-8 md:w-12 h-8 md:h-12 rounded-full flex justify-center items-center hover:bg-black/[0.05] cursor-pointer relative">
-                  <BsCart />
-                  <div className="h-[14px] md:h-[18px] absolute min-w-[14px] md:min-2-[18px] rounded-full bg-black top-1 left-5 flex justify-center items-center md:left-7 text-white text-[10px] md:text-[12px] px-1 ">
-                    5
+                {cartItems.length > 0 && (
+                  <div className="w-8 md:w-12 h-8 md:h-12 rounded-full flex justify-center items-center hover:bg-black/[0.05] cursor-pointer relative">
+                    <BsCart />
+                    <div className="h-[14px] md:h-[18px] absolute min-w-[14px] md:min-2-[18px] rounded-full bg-black top-1 left-5 flex justify-center items-center md:left-7 text-white text-[10px] md:text-[12px] px-1 ">
+                      {cartItems.length}
+                    </div>
                   </div>
-                </div>
+                )}
               </Link>
 
               {/* mobile menu start */}
