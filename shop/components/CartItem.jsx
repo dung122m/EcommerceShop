@@ -1,14 +1,20 @@
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { updateCart } from "@/store/cartSlice";
+import { updateCart, removeFromCart } from "@/store/cartSlice";
+import { useDispatch } from "react-redux";
+
 const CartItem = ({ data }) => {
   const mutableArr = [...data.variants];
+  const dispatch = useDispatch();
+
   const updateCartItem = (e, key) => {
     let payload = {
       key,
       val: key === "quantity" ? parseInt(e.target.value) : e.target.value,
+      id: data?.product?.id,
     };
+    dispatch(updateCart(payload));
   };
 
   return (
@@ -60,28 +66,31 @@ const CartItem = ({ data }) => {
                 </select>
               </div>
               <div className="font-semibold">Quantity</div>
-              <select className="hover:text-black">
-                {Array.from({ length: 10 }, (_, i) => i + 1).map((q, i) => (
-                  <option
-                    index={i}
-                    value={q}
-                    selected={data.quantity === q}
-                    onChange={(e) => {
-                      updateCartItem(e, "quantity");
-                    }}
-                  >
-                    {q}
-                  </option>
-                ))}
+              <select
+                className="hover:text-black"
+                onChange={(e) => {
+                  updateCartItem(e, "quantity");
+                }}
+              >
+                {Array.from({ length: 10 }, (_, i) => i + 1).map((q, i) => {
+                  return (
+                    <option key={i} value={q} selected={data.quantity === q}>
+                      {q}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
-          <RiDeleteBin6Line className="cursor-pointer mt-3 text-black/[0.5] hover:text-black text-[16px] md:text-[20px]" />
+          <RiDeleteBin6Line
+            className="cursor-pointer mt-3 text-black/[0.5] hover:text-black text-[16px] md:text-[20px]"
+            onClick={() => dispatch(removeFromCart({ id: data.product.id }))}
+          />
         </div>
       </div>
       {/* product price */}
       <div className="font-semibold">
-        {data.product.current_price.toLocaleString("vi-VN") + " VND"}
+        {data.oneQuantityPrice.toLocaleString("vi-VN") + " VND"}
       </div>
     </div>
   );

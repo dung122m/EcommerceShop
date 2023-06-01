@@ -11,6 +11,7 @@ import Subhead from "./Subhead";
 import MenuMobile from "./MenuMobile";
 import axios from "../pages/api/axios";
 import { useSelector } from "react-redux";
+import Search from "./Search";
 const Header = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [select, setSelect] = useState(null);
@@ -19,6 +20,19 @@ const Header = () => {
   const [showCatMenu, setShowCatMenu] = useState(false);
   const [categories, setCategories] = useState(null);
   const { cartItems } = useSelector((state) => state.cart);
+  const [product, setProduct] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/products"); // Thay 'URL_API' bằng URL thực tế của API
+        setProduct(response.data.data.records); // Lưu trữ dữ liệu vào state 'data'
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData(); // Gọi hàm fetchData() để lấy dữ liệu từ API khi component được render
+  }, []);
+
   const controlNav = () => {
     if (window.innerWidth > 1024) {
       if (window.scrollY > 200) {
@@ -66,7 +80,7 @@ const Header = () => {
               className="w-[60px]"
             />
           </Link>
-          <div className="flex items-center justify-between text-center lg:gap-20 flex-col lg:flex-row ">
+          <div className="flex items-center flex-[2] justify-center text-center lg:gap-20 flex-col lg:flex-row ">
             <Menu
               showCatMenu={showCatMenu}
               setShowCatMenu={setShowCatMenu}
@@ -81,18 +95,12 @@ const Header = () => {
                 categories={categories}
               />
             )}
-
+            <Search product={product} className="" />
             <div className="flex items-center justify-center mx-2 md:mx-0 gap-4 text-black  ">
-              <div>
+              {/* <div>
                 <AiOutlineSearch />
-              </div>
-              <div>
-                <input
-                  className="border-2 rounded-full px-3"
-                  type="text"
-                  placeholder="Search"
-                />
-              </div>
+              </div> */}
+
               <div className="w-8 md:w-12 h-8 md:h-12 rounded-full flex justify-center items-center hover:bg-black/[0.05] cursor-pointer relative">
                 <IoMdHeartEmpty />
                 <div className="h-[14px] md:h-[18px] absolute min-w-[14px] md:min-2-[18px] rounded-full bg-black top-1 left-5 flex justify-center items-center md:left-7 text-white text-[10px] md:text-[12px] px-1 ">

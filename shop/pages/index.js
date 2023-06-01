@@ -5,7 +5,7 @@ import Wrapper from "@/components/Wrapper";
 
 import { Inter } from "@next/font/google";
 import axios from "./api/axios";
-
+import Search from "@/components/Search";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home({ products }) {
@@ -14,8 +14,8 @@ export default function Home({ products }) {
       <main>
         <Banner />
         <Wrapper>
-          <div className="text-center max-w-[800px] mx-auto  my-[20px] md:my-[50px]">
-            <div className="text-[40px]  mb-5 font-semibold leading-tight">
+          <div className="text-center max-w-[800px] mx-auto my-[20px] md:my-[50px] ">
+            <div className="text-[40px] mb-5 font-semibold leading-tight">
               A SPRINGY RIDE FOR EVERY RUN{" "}
             </div>
             <div className="text-lg md:text-base">

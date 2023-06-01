@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Wrapper from "@/components/Wrapper";
@@ -7,8 +7,14 @@ import CartItem from "@/components/CartItem";
 import { useSelector } from "react-redux";
 const Cart = () => {
   const { cartItems } = useSelector((state) => state.cart);
+  const total = useMemo(() => {
+    return cartItems.reduce(
+      (total, val) => total + val.product.current_price,
+      0
+    );
+  }, [cartItems]);
   return (
-    <div className="w-full md:py-20">
+    <div className="w-full md:py-20 min-h-screen">
       <Head>
         <title>Bag. Store.</title>
       </Head>
@@ -28,24 +34,15 @@ const Cart = () => {
               {/* sumary start */}
               <div className="flex-[1] font-semibold">
                 <div className="text-lg font-semibold">Summary</div>
-                <div className="p-5 my-5  border-b flex flex-col">
+                <div className="p-5 my-5 flex flex-col">
                   <div className="flex justify-between">
                     <div className=" text-md mg:text-lg font-medium text-black ">
-                      Subtotal{" "}
+                      Total{" "}
                     </div>
-                    <div>3.290.000đ</div>
-                  </div>
-                  <div className="flex justify-between mt-2">
-                    <div className=" text-md mg:text-lg font-medium text-black ">
-                      Estimated Delivery & Handling
-                    </div>
-                    <div>250.000đ</div>
+                    <div>{total.toLocaleString("vi-VN") + " VND"}</div>
                   </div>
                 </div>
-                <div className="flex p-5 border-b my-5 justify-between">
-                  <div className="font-medium">Total</div>
-                  <div>3.290.000đ</div>
-                </div>
+
                 <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75">
                   Check Out
                 </button>

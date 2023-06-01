@@ -158,7 +158,6 @@ export async function getStaticPaths() {
       return response.data.data.records;
     } catch (error) {
       console.error(error);
-      // Xử lý lỗi ở đây
     }
   }
 

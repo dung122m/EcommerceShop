@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { BsChevronDown } from "react-icons/bs";
+import Search from "./Search";
 const Menu = ({ showCatMenu, setShowCatMenu, categories }) => {
   const data = [
     { id: 1, name: "Home", url: "/" },
@@ -9,10 +10,12 @@ const Menu = ({ showCatMenu, setShowCatMenu, categories }) => {
     { id: 4, name: "Sale", url: "/sale" },
   ];
   const subMenuData = [
-    { id: 1, name: "Men", doc_count: 11 },
-    { id: 2, name: "Woman", doc_count: 12 },
-    { id: 3, name: "Kid", doc_count: 13 },
+    { id: 5, name: "All Products", url: "/category/All" },
+    { id: 1, name: "Men", url: "/category/Men" },
+    { id: 2, name: "Woman", url: "/category/Woman" },
+    { id: 3, name: "Kid", url: "/category/Kid" },
   ];
+
   return (
     <div>
       <div className="flex items-center justify-center"></div>
@@ -29,19 +32,16 @@ const Menu = ({ showCatMenu, setShowCatMenu, categories }) => {
                 <BsChevronDown />
 
                 {showCatMenu && (
-                  <ul className="bg-white absolute top-6 left-0 min-w-[250px] px-1 py-1 text-black shadow-lg">
+                  <ul className="bg-white absolute top-6 left-0 min-w-[250px] px-1 text-black shadow-lg">
                     {subMenuData.map((submenu) => {
                       return (
                         <Link
                           key={submenu.id}
-                          href={`/category/${submenu.name}`}
+                          href={submenu.url}
                           onClick={() => setShowCatMenu(false)}
                         >
                           <li className="h-12 flex justify-between items-center px-3 hover:bg-black/[0.03] rounded-md">
                             {submenu.name}
-                            {/* <span className="opacity-50 text-sm">
-                              {submenu.doc_count}
-                            </span> */}
                           </li>
                         </Link>
                       );

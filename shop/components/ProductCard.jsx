@@ -4,7 +4,10 @@ import Image from "next/image";
 import { getDiscountedPricePercentage } from "@/utils/helper";
 const ProductCard = ({ data }) => {
   return (
-    <Link href={`/products/${data?.id}`}>
+    <Link
+      href={`/products/${data?.id}`}
+      className="transform overflow-hidden bg-white duration-200 hover:scale-105 cursor-pointer"
+    >
       <img src={data?.main_image} alt="" height={500} width={500} />
       <div className="p-4 text-black/[0.9]">{data?.name}</div>
       <div className="flex items-center text-black/[0.5]">
