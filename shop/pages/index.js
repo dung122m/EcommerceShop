@@ -25,12 +25,12 @@ export default function Home({ products }) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-14 px-5 md:px-0">
             {" "}
-            {products.data.records.map((product) => (
+            {products?.data?.records?.map((product) => (
               <ProductCard key={product.id} data={product} />
             ))}
           </div>
 
-          <RelatedProducts className="mb-2" />
+          {/* <RelatedProducts className="mb-2" /> */}
         </Wrapper>
       </main>
     </>

@@ -21,7 +21,6 @@ const Search = ({ product }) => {
   };
 
   const renderSuggestion = (suggestion) => {
-    console.log(suggestion);
     const MAX_CHARACTERS = 25; // Số kí tự tối đa hiển thị
 
     const truncatedName =
@@ -59,8 +58,6 @@ const Search = ({ product }) => {
     const productId = suggestion.id;
     const url = `/products/${productId}`;
 
-    // Chuyển hướng đến trang "/products/${suggestion.id}"
-    // Sử dụng Link từ thư viện next/link
     router.push(url);
     setValue(""); // Xóa giá trị của ô input
   };
@@ -77,7 +74,7 @@ const Search = ({ product }) => {
   };
 
   return (
-    <div className="absolute top-[100px] md:right-10 md:w-[300px] h-[430px] overflow-hidden md:top-[38px] ">
+    <div className="absolute top-[100px] md:right-10 md:w-[300px] h-[350px] overflow-hidden md:top-[38px] ">
       <Autosuggest
         suggestions={suggestions}
         onSuggestionsFetchRequested={onSuggestionsFetchRequested}

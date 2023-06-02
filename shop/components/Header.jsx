@@ -14,7 +14,6 @@ import { useSelector } from "react-redux";
 import Search from "./Search";
 const Header = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
-  const [select, setSelect] = useState(null);
   const [show, setShow] = useState("translate-y-0");
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showCatMenu, setShowCatMenu] = useState(false);
@@ -24,13 +23,13 @@ const Header = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/products"); // Thay 'URL_API' bằng URL thực tế của API
-        setProduct(response.data.data.records); // Lưu trữ dữ liệu vào state 'data'
+        const response = await axios.get("/products");
+        setProduct(response.data.data.records);
       } catch (error) {
         console.log(error);
       }
     };
-    fetchData(); // Gọi hàm fetchData() để lấy dữ liệu từ API khi component được render
+    fetchData();
   }, []);
 
   const controlNav = () => {
