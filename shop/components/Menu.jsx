@@ -7,7 +7,6 @@ const Menu = ({ showCatMenu, setShowCatMenu, categories }) => {
     { id: 1, name: "Home", url: "/" },
     { id: 2, name: "About", url: "/about" },
     { id: 3, name: "Categories", subMenu: true },
-    { id: 4, name: "Sale", url: "/sale" },
   ];
   const subMenuData = [
     { id: 5, name: "All Products", url: "/category/All" },

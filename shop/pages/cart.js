@@ -7,6 +7,7 @@ import CartItem from "@/components/CartItem";
 import { useSelector } from "react-redux";
 const Cart = () => {
   const { cartItems } = useSelector((state) => state.cart);
+  const accessToken = localStorage.getItem("access_token");
   const total = useMemo(() => {
     return cartItems.reduce(
       (total, val) => total + val.product.current_price,
@@ -42,10 +43,19 @@ const Cart = () => {
                     <div>{total.toLocaleString("vi-VN") + " VND"}</div>
                   </div>
                 </div>
-
-                <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75">
-                  Check Out
-                </button>
+                {accessToken ? (
+                  <Link href="/checkout">
+                    <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75">
+                      Check Out
+                    </button>
+                  </Link>
+                ) : (
+                  <Link href="/login">
+                    <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75">
+                      Check Out
+                    </button>
+                  </Link>
+                )}
               </div>
 
               {/* sumary end */}

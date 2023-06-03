@@ -11,13 +11,14 @@ const MenuMobile = ({
     { id: 1, name: "Home", url: "/" },
     { id: 2, name: "About", url: "/about" },
     { id: 3, name: "Categories", subMenu: true },
-    { id: 4, name: "Sale", url: "/sale" },
   ];
   const subMenuData = [
-    { id: 1, name: "Men", doc_count: 11 },
-    { id: 2, name: "Woman", doc_count: 12 },
-    { id: 3, name: "Kid", doc_count: 13 },
+    { id: 5, name: "All Products", url: "/category/All" },
+    { id: 1, name: "Men", url: "/category/Men" },
+    { id: 2, name: "Woman", url: "/category/Woman" },
+    { id: 3, name: "Kid", url: "/category/Kid" },
   ];
+
   return (
     <div>
       <div className="flex items-center justify-center"></div>
@@ -41,7 +42,7 @@ const MenuMobile = ({
                       return (
                         <Link
                           key={submenu.id}
-                          href={`/category/${submenu.name}`}
+                          href={submenu.url}
                           onClick={() => {
                             setShowCatMenu(false);
                             setMobileMenu(false);

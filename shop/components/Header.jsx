@@ -94,7 +94,7 @@ const Header = () => {
                 categories={categories}
               />
             )}
-            <Search product={product} className="hidden md:block" />
+            <Search product={product} className="" />
             <div className="flex items-center justify-center mx-2 md:mx-0 gap-4 text-black  ">
               {/* <div>
                 <AiOutlineSearch />

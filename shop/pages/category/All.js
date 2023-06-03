@@ -153,7 +153,7 @@ export default function All({ products }) {
         <title>All Products</title>
       </Head>
       <Wrapper>
-        <div className="pl-5 my-5 flex md:flex-row flex-col md:justify-between md:items-center w-full ">
+        <div className="pl-5 my-5 flex md:flex-row flex-col justify-center items-center gap-4 md:gap-0 md:justify-between md:items-center w-full ">
           <div>
             <FormControl>
               <InputLabel id="my-select-label" className="mb-5">
