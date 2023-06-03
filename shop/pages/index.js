@@ -5,10 +5,18 @@ import Wrapper from "@/components/Wrapper";
 
 import { Inter } from "@next/font/google";
 import axios from "./api/axios";
-import Search from "@/components/Search";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home({ products }) {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const userId = localStorage.getItem("user_id");
+    if (userId) {
+      dispatch(restoreCart(userId));
+    }
+  }, [dispatch]);
   return (
     <>
       <main>

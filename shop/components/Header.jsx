@@ -18,7 +18,7 @@ const Header = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showCatMenu, setShowCatMenu] = useState(false);
   const [categories, setCategories] = useState(null);
-  const { cartItems } = useSelector((state) => state.cart);
+  const cartItems = useSelector((state) => state.cart.cartItems);
   const [product, setProduct] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
@@ -94,7 +94,7 @@ const Header = () => {
                 categories={categories}
               />
             )}
-            <Search product={product} className="" />
+            <Search product={product} className="hidden md:block" />
             <div className="flex items-center justify-center mx-2 md:mx-0 gap-4 text-black  ">
               {/* <div>
                 <AiOutlineSearch />

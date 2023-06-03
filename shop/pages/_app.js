@@ -3,9 +3,9 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import "@/styles/globals.css";
 import { UserProvider } from "@/utils/UserContext";
-import Cookies from "js-cookie";
 import { Provider } from "react-redux";
-import store from "@/store/store";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "../store/store";
 function App({ Component, pageProps, router }) {
   const isAdmin = router.pathname.startsWith(
     "/admin" || "/products" || "settings" || "orders"
@@ -34,11 +34,13 @@ function App({ Component, pageProps, router }) {
         />
       </Head>
       <Provider store={store}>
-        <UserProvider>
-          <Header />
-          <Component {...pageProps} />
-          <Footer />
-        </UserProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <UserProvider>
+            <Header />
+            <Component {...pageProps} />
+            <Footer />
+          </UserProvider>
+        </PersistGate>
       </Provider>
     </>
   );

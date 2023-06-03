@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { resetCart } from "../store/cartSlice";
 const Subhead = () => {
   const [isLoggedIn, setisLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
@@ -18,10 +20,11 @@ const Subhead = () => {
     }
   }, []);
   const router = useRouter();
-
+  const dispatch = useDispatch();
   function logout() {
     localStorage.removeItem("access_token");
     setisLoggedIn(false);
+    dispatch(resetCart());
     router.push("/");
   }
 

@@ -10,6 +10,7 @@ import { AiOutlineCheck } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
 import axios from "./api/axios";
 import UserContext from "@/utils/UserContext";
+import { useDispatch } from "react-redux";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +23,7 @@ export default function LoginPage() {
   const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{8,24}$/;
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const router = useRouter();
+  const dispatch = useDispatch();
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };

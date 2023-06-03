@@ -8,7 +8,13 @@ const ProductCard = ({ data }) => {
       href={`/products/${data?.id}`}
       className="transform overflow-hidden bg-white duration-200 hover:scale-105 cursor-pointer"
     >
-      <img src={data?.main_image} alt="" height={500} width={500} />
+      <img
+        src={data?.main_image}
+        alt=""
+        height={500}
+        width={500}
+        className="shrink-0 aspect-square"
+      />
       <div className="p-4 text-black/[0.9]">{data?.name}</div>
       <div className="flex items-center text-black/[0.5]">
         <p className="ml-2 mr-4 text-lg font-semibold ">
