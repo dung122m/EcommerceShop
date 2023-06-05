@@ -10,6 +10,8 @@ import { AiOutlineCheck } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
 import axios from "./api/axios";
 import { useDispatch } from "react-redux";
+import jwt from "jsonwebtoken";
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,12 +37,11 @@ export default function LoginPage() {
   }, [email]);
   async function handleSubmit(e) {
     e.preventDefault();
-
+    const aceses = localStorage.getItem("accessAdmin");
     let data = JSON.stringify({
       email: email,
       password: password,
     });
-    console.log(email);
     try {
       if (email === "adminn") {
         let dataAdmin = JSON.stringify({

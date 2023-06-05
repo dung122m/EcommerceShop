@@ -230,7 +230,7 @@ export default function All({ products }) {
 }
 
 export async function getStaticProps() {
-  const response = await axios.get("/products");
+  const response = await axios.get("/products/?limit=1000");
   return {
     props: {
       products: response.data,

@@ -63,11 +63,12 @@ const Index = () => {
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Original Price
-                </th>
+
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Current Price
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Original Price
                 </th>
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Quantity
@@ -83,14 +84,15 @@ const Index = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">{user.name}</div>
                   </td>
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {user.original_price.toLocaleString("vi-VN")}
+                      {user.current_price.toLocaleString("vi-VN")}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {user.current_price.toLocaleString("vi-VN")}
+                      {user.original_price.toLocaleString("vi-VN")}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -108,7 +110,7 @@ const Index = () => {
               pageClassName="px-2 py-1 bg-gray-200 text-gray-800 rounded-md cursor-pointer hover:bg-gray-300"
               previousClassName="px-2 py-1 bg-gray-200 text-gray-800 rounded-md cursor-pointer hover:bg-gray-300"
               nextClassName="px-2 py-1 bg-gray-200 text-gray-800 rounded-md cursor-pointer hover:bg-gray-300"
-              activeClassName="bg-blue-500 text-white"
+              activeClassName="bg-green-500 text-white"
               disabledClassName="opacity-50 cursor-not-allowed"
             />
           </div>
