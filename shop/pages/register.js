@@ -11,13 +11,32 @@ const Register = () => {
   const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{8,24}$/;
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const PHONE_REGEX = /^\+?\d{1,2}?\d{9}$/;
+  const FNAME_REGEX =
+    /^[a-zA-ZÀ-ỹỲẤẮẾỀỂỐỔỜỞỨỪỬỮỲÁẤẮÉẾỀẾỂÍÌỈÓÒỎỐỒỔỖỚỜỞỠÚÙỦỨỪỬỮÝÝỶỸĐđ ]{1,20}$/;
+  const LNAME_REGEX =
+    /^[a-zA-ZÀ-ỹỲẤẮẾỀỂỐỔỜỞỨỪỬỮỲÁẤẮÉẾỀẾỂÍÌỈÓÒỎỐỒỔỖỚỜỞỠÚÙỦỨỪỬỮÝÝỶỸĐđ ]{1,20}$/;
+  const ADDRESS_REGEX = /^.{2,}$/;
   const userRef = useRef();
   const phoneRef = useRef();
   const router = useRouter();
+
+  //email
   const [user, setUser] = useState("");
   const [validName, setValidName] = useState(false);
+  //First Name
+  const [fName, setFname] = useState("");
+  const [validFname, setValidFname] = useState(false);
+  //last name
+  const [lName, setLname] = useState("");
+  const [validLname, setValidLname] = useState(false);
+
+  //phone
   const [phone, setPhone] = useState("");
   const [validPhone, setValidPhone] = useState(false);
+  // address
+  const [address, setAddress] = useState("");
+  const [validAddress, setValidAddress] = useState(false);
+  //password
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
   const handleSubmit = async (e) => {
@@ -27,11 +46,17 @@ const Register = () => {
       phone_number: phone,
       email: user,
       password: pwd,
+      first_name: fName,
+      last_name: lName,
+      address: address,
     });
 
     try {
       const response = await axios.post("/auth/register", data); // Gọi API đăng ký
-      toast.success(response?.data.status);
+      setTimeout(function () {
+        toast.success("Registration success !");
+      }, 100);
+
       router.push("/login");
     } catch (error) {
       console.log(error);
@@ -52,7 +77,15 @@ const Register = () => {
   useEffect(() => {
     setValidPhone(PHONE_REGEX.test(phone));
   }, [phone]);
-
+  useEffect(() => {
+    setValidFname(FNAME_REGEX.test(fName));
+  }, [fName]);
+  useEffect(() => {
+    setValidLname(LNAME_REGEX.test(lName));
+  }, [lName]);
+  useEffect(() => {
+    setValidAddress(ADDRESS_REGEX.test(address));
+  }, [address]);
   useEffect(() => {
     setValidPwd(PWD_REGEX.test(pwd));
   }, [pwd]);
@@ -87,7 +120,6 @@ const Register = () => {
             className="w-[100px]"
           />
         </div>
-
         <h2 className="text-2xl font-extrabold mb-6 text-center">
           BECOME A NIKE MEMBER
         </h2>
@@ -95,7 +127,6 @@ const Register = () => {
           Create your Nike Member profile and get first access to the very best
           of Nike products, inspiration and community.
         </div>
-
         <div className="mb-4">
           <label
             htmlFor="email"
@@ -121,7 +152,7 @@ const Register = () => {
             required
             aria-invalid={validName ? "false" : "true"}
             aria-describedby="uidnote"
-            placeholder="Email address"
+            placeholder="Email"
             className="w-full border border-gray-400 p-2 rounded-md"
           />
           <p
@@ -133,7 +164,127 @@ const Register = () => {
             Please enter a valid email address
           </p>
         </div>
-
+        {/* First Name */}
+        <div className="mb-4">
+          <label
+            htmlFor="email"
+            className=" text-gray-700 font-bold mb-2 flex items-center gap-2"
+          >
+            First Name:
+            <span className={validFname ? "text-green-700 text-xl" : "hidden"}>
+              <AiOutlineCheck />
+            </span>
+            <span
+              className={
+                validFname || !fName ? "hidden" : "text-red-600 text-xl"
+              }
+            >
+              <FaTimes />
+            </span>
+          </label>
+          <input
+            type="text"
+            id="firstName"
+            ref={userRef}
+            autoComplete="off"
+            name="firstName"
+            onChange={(e) => setFname(e.target.value)}
+            required
+            aria-invalid={validFname ? "false" : "true"}
+            aria-describedby="uidnote"
+            placeholder="First Name"
+            className="w-full border border-gray-400 p-2 rounded-md"
+          />
+          <p
+            id="uidnote"
+            className={`${
+              validFname || !fName ? "hidden" : "relative"
+            } text-red-400 mt-2 text-sm`}
+          >
+            Please enter a valid name
+          </p>
+        </div>
+        {/* last name */}
+        <div className="mb-4">
+          <label
+            htmlFor="lName"
+            className=" text-gray-700 font-bold mb-2 flex items-center gap-2"
+          >
+            Last Name:
+            <span className={validLname ? "text-green-700 text-xl" : "hidden"}>
+              <AiOutlineCheck />
+            </span>
+            <span
+              className={
+                validLname || !lName ? "hidden" : "text-red-600 text-xl"
+              }
+            >
+              <FaTimes />
+            </span>
+          </label>
+          <input
+            type="text"
+            id="lastName"
+            ref={userRef}
+            autoComplete="off"
+            name="lastName"
+            onChange={(e) => setLname(e.target.value)}
+            required
+            aria-invalid={validLname ? "false" : "true"}
+            aria-describedby="uidnote"
+            placeholder="Last Name"
+            className="w-full border border-gray-400 p-2 rounded-md"
+          />
+          <p
+            id="uidnote"
+            className={`${
+              validLname || !lName ? "hidden" : "relative"
+            } text-red-400 mt-2 text-sm`}
+          >
+            Please enter a valid name
+          </p>
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="address"
+            className=" text-gray-700 font-bold mb-2 flex items-center gap-2"
+          >
+            Address:
+            <span
+              className={validAddress ? "text-green-700 text-xl" : "hidden"}
+            >
+              <AiOutlineCheck />
+            </span>
+            <span
+              className={
+                validAddress || !address ? "hidden" : "text-red-600 text-xl"
+              }
+            >
+              <FaTimes />
+            </span>
+          </label>
+          <input
+            type="text"
+            id="email"
+            ref={userRef}
+            autoComplete="off"
+            name="address"
+            onChange={(e) => setAddress(e.target.value)}
+            required
+            aria-invalid={validAddress ? "false" : "true"}
+            aria-describedby="uidnote"
+            placeholder="Address"
+            className="w-full border border-gray-400 p-2 rounded-md"
+          />
+          <p
+            id="uidnote"
+            className={`${
+              validAddress || !address ? "hidden" : "relative"
+            } text-red-400 mt-2 text-sm`}
+          >
+            Please enter a valid address
+          </p>
+        </div>
         <div className="mb-4">
           <label
             htmlFor="phone"
@@ -173,7 +324,6 @@ const Register = () => {
             Please enter a valid phone number
           </p>
         </div>
-
         <div className="mb-4">
           <label
             htmlFor="pwd"
@@ -216,7 +366,6 @@ const Register = () => {
           By creating an account, you agree to Nike's Privacy Policy and Terms
           of Use.
         </div>
-
         <button
           className={`${
             !user || !pwd || !phone || !validName || !validPwd || !validPhone
@@ -226,7 +375,6 @@ const Register = () => {
         >
           JOIN US
         </button>
-
         <div className="text-center text-sm text-black/[0.7] m-5">
           Already a Member?
           <span className="text-black underline">

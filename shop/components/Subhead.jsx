@@ -7,14 +7,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { resetCart } from "../store/cartSlice";
 const Subhead = () => {
   const [isLoggedIn, setisLoggedIn] = useState(false);
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   useEffect(() => {
     // Perform localStorage action
     const accessToken = localStorage.getItem("access_token");
-    const storedEmail = localStorage.getItem("email");
+    const name = localStorage.getItem("name");
     if (accessToken) {
       setisLoggedIn(true);
-      setEmail(storedEmail);
+      setName(name);
     } else {
       setisLoggedIn(false);
     }
@@ -23,9 +23,13 @@ const Subhead = () => {
   const dispatch = useDispatch();
   function logout() {
     localStorage.removeItem("access_token");
+    localStorage.removeItem("name");
+    localStorage.removeItem("email");
+    localStorage.removeItem("userCart");
+    localStorage.removeItem("results");
     setisLoggedIn(false);
     dispatch(resetCart());
-    router.push("/");
+    router.push("/"); 
   }
 
   return (
@@ -40,8 +44,8 @@ const Subhead = () => {
               <li className="hover:text-orange-600">Help</li>
             </Link>
 
-            <div className="flex gap-5 hover:cursor-pointer">
-              <span>{email}</span>
+            <div className="flex gap-5 hover:cursor-pointer text-green-600">
+              <span>{name}</span>
 
               <li
                 className="hover:text-orange-600 hover:cursor-pointer text-red-600"

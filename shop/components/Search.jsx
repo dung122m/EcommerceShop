@@ -29,7 +29,7 @@ const Search = ({ product }) => {
         : suggestion.name;
 
     return (
-      <div className="bg-gray-200 border-b border-1 border-black/[0.1] text-black p-4 z-100 grid grid-cols-[auto,1fr] gap-4">
+      <div className="bg-gray-200 border-b border-1 border-black/[0.1] cursor-pointer text-black p-4 z-100 grid grid-cols-[auto,1fr] gap-4">
         <div className="h-12 w-12">
           <img
             src={suggestion.main_image}

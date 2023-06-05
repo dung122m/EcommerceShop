@@ -1,6 +1,11 @@
 import Link from "next/link";
 import React from "react";
-import { AiFillHome, AiFillSetting } from "react-icons/ai";
+import {
+  AiFillHome,
+  AiFillSetting,
+  AiOutlinePoweroff,
+  AiOutlineUser,
+} from "react-icons/ai";
 import { RiAdminFill } from "react-icons/ri";
 import {
   MdDevicesOther,
@@ -14,6 +19,12 @@ const NavAdmin = () => {
   const activeLink = inactiveLink + " bg-white text-black rounded-l-lg";
   const router = useRouter();
   const { pathname } = router;
+  const handleLogout = () => {
+    localStorage.removeItem("accessAdmin");
+
+    // Chuyển hướng về trang home
+    router.push("/");
+  };
   return (
     <aside className=" p-4 text-white pr-0">
       <Link
@@ -47,12 +58,23 @@ const NavAdmin = () => {
           Orders
         </Link>
         <Link
+          href={"/admin/users"}
+          className={pathname.includes("/users") ? activeLink : inactiveLink}
+        >
+          <AiOutlineUser />
+          Users
+        </Link>
+        <Link
           href={"/admin/settings"}
           className={pathname.includes("/settings") ? activeLink : inactiveLink}
         >
           <AiFillSetting />
           Settings
-        </Link>
+        </Link>{" "}
+        <button className="flex gap-2 items-center p-2" onClick={handleLogout}>
+          <AiOutlinePoweroff />
+          Log out
+        </button>
       </nav>
     </aside>
   );

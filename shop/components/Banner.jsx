@@ -15,9 +15,20 @@ const Banner = () => {
         <div className="aspect-[16/10] md:aspect-auto object-cover">
           <img src="/slide2.jpg" />
         </div>
-
-        <div>
+        <div className="aspect-[16/10] md:aspect-auto object-cover">
+          <img src="/slide1.jpg" />
+        </div>
+        <div className="aspect-[16/10] md:aspect-auto object-cover">
           <img src="/slide3.jpg" />
+        </div>
+        <div className="aspect-[16/10] md:aspect-auto object-cover">
+          <img src="https://static.nike.com/a/images/f_auto/dpr_2.0,cs_srgb/h_2426,c_limit/1f905932-1d85-4a54-a42b-0ebfe9ca3463/nike-just-do-it.png" />
+        </div>
+        <div className="aspect-[16/10] md:aspect-auto object-cover">
+          <img
+            src="https://static.nike.com/a/images/f_auto/dpr_2.0,cs_srgb/w_1776,c_limit/b6de205f-c91a-4cb2-b58a-b2bb29080cd0/nike-just-do-it.jpg"
+            alt=""
+          />
         </div>
       </Carousel>
       <style></style>

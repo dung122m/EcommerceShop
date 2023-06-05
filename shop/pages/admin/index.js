@@ -4,7 +4,7 @@ import Head from "next/head";
 import React from "react";
 
 const admin = () => {
-  return <LayoutAdmin>test </LayoutAdmin>;
+  return <LayoutAdmin>Hello Admin </LayoutAdmin>;
 };
 
 export default admin;

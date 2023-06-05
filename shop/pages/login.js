@@ -9,7 +9,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineCheck } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
 import axios from "./api/axios";
-import UserContext from "@/utils/UserContext";
 import { useDispatch } from "react-redux";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -20,8 +19,9 @@ export default function LoginPage() {
   const [validPwd, setValidPwd] = useState(false);
   const [validName, setValidName] = useState(false);
   const userRef = useRef();
-  const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{8,24}$/;
-  const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{8,24}|^admin$/;
+  const EMAIL_REGEX =
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|^adminn$/;
   const router = useRouter();
   const dispatch = useDispatch();
   const handlePasswordChange = (event) => {
@@ -40,17 +40,34 @@ export default function LoginPage() {
       email: email,
       password: password,
     });
-
+    console.log(email);
     try {
-      const response = await axios.post("/auth/login", data); // Gọi API đăng nhập
-      const accessToken = response?.data?.data?.access_token;
-      localStorage.setItem("access_token", accessToken);
-      localStorage.setItem("email", response?.data?.data?.user?.email);
-      toast.success("Login successful");
-      setTimeout(() => {
-        router.push("/");
-        window.location.href = "/";
-      }, 2000);
+      if (email === "adminn") {
+        let dataAdmin = JSON.stringify({
+          username: email,
+          password: password,
+        });
+        const response = await axios.post("/admins/login", dataAdmin);
+        console.log(response.data.data.access_token);
+        localStorage.setItem("accessAdmin", response.data.data.access_token);
+        toast.success("Login successful");
+        setTimeout(() => {
+          router.push("/admin");
+        }, 1000);
+      } else {
+        const response = await axios.post("/auth/login", data); // Gọi API đăng nhập
+        const accessToken = response?.data?.data?.access_token;
+        localStorage.setItem("access_token", accessToken);
+        localStorage.setItem(
+          "name",
+          `${response?.data?.data?.user.first_name} ${response?.data?.data?.user.last_name}`
+        );
+        toast.success("Login successful");
+        setTimeout(() => {
+          router.push("/");
+          window.location.href = "/";
+        }, 1000);
+      }
     } catch (error) {
       console.log(error);
       if (error?.response?.data?.message)

@@ -34,7 +34,7 @@ export const cartSlice = createSlice({
       );
     },
     resetCart: (state) => {
-      state.cartItems = []; // Đặt lại trạng thái cartItems về rỗng khi logout
+      state.cartItems = [];
     },
   },
 });
