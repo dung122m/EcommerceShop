@@ -13,7 +13,7 @@ export default function All({ products }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/categories");
+        const response = await axios.get("/categories/?limit=100");
         const sortedCategories = [
           { name: "All" },
           ...response.data.data.records,

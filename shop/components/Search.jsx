@@ -74,7 +74,7 @@ const Search = ({ product }) => {
   };
 
   return (
-    <div className="absolute top-[100px] md:right-10 md:w-[300px] h-[350px] overflow-hidden md:top-[38px] hidden md:block">
+    <div className="absolute top-[100px] md:right-10 md:w-[300px] max-h-[432px] overflow-hidden md:top-[38px] hidden md:block">
       <Autosuggest
         suggestions={suggestions}
         onSuggestionsFetchRequested={onSuggestionsFetchRequested}

@@ -154,7 +154,7 @@ export default ProductDetails;
 export async function getStaticPaths() {
   async function fetchData() {
     try {
-      const response = await axios.get("/products");
+      const response = await axios.get("/products/?limit=1000");
       return response.data.data.records;
     } catch (error) {
       console.error(error);

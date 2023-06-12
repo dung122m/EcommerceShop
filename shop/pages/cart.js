@@ -51,6 +51,7 @@ const Cart = () => {
         setIsProcessing(false);
         if (access_token) {
           window.location.href = newLinkHref;
+          dispatch(resetCart());
         }
       })
       .catch((error) => {
@@ -124,7 +125,7 @@ const Cart = () => {
               Go ahead and explore top categories.
             </span>
             <Link
-              href="/"
+              href="/category/All"
               className="py-4 px-8 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75 mt-8"
             >
               Continue Shopping
