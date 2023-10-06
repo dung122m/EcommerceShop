@@ -17,6 +17,8 @@ export default function Home({ products }) {
       dispatch(restoreCart(userId));
     }
   }, [dispatch]);
+  // console.log(localStorage.getItem("id"));
+
   return (
     <>
       <main>

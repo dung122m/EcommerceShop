@@ -49,7 +49,6 @@ export default function LoginPage() {
           password: password,
         });
         const response = await axios.post("/admins/login", dataAdmin);
-        console.log(response.data.data.access_token);
         localStorage.setItem("accessAdmin", response.data.data.access_token);
         toast.success("Login successful");
         setTimeout(() => {
@@ -63,6 +62,7 @@ export default function LoginPage() {
           "name",
           `${response?.data?.data?.user.first_name} ${response?.data?.data?.user.last_name}`
         );
+        localStorage.setItem("id", response?.data?.data?.user.id);
         toast.success("Login successful");
         setTimeout(() => {
           router.push("/");

@@ -71,7 +71,7 @@ const Header = () => {
     >
       {<Subhead />}
       <Wrapper>
-        <div className=" flex flex-col lg:flex-row md:gap-10 gap-2 justify-between">
+        <div className=" flex flex-col lg:flex-row md:gap-10 gap-2 justify-between font-bold ">
           <Link href="/" className="flex justify-center flex-col items-center">
             <img
               src="https://i.pinimg.com/736x/8d/62/79/8d6279c04b35d101f029db1e2057a9b5.jpg"
@@ -100,7 +100,7 @@ const Header = () => {
                 <AiOutlineSearch />
               </div> */}
 
-              <div className="w-8 md:w-12 h-8 md:h-12 rounded-full flex justify-center items-center hover:bg-black/[0.05] cursor-pointer relative">
+              <div className="w-8 font-bold md:w-12 h-8 md:h-12 rounded-full flex justify-center items-center hover:bg-black/[0.05] cursor-pointer relative">
                 <IoMdHeartEmpty />
                 <div className="h-[14px] md:h-[18px] absolute min-w-[14px] md:min-2-[18px] rounded-full bg-black top-1 left-5 flex justify-center items-center md:left-7 text-white text-[10px] md:text-[12px] px-1 ">
                   5
