@@ -40,7 +40,7 @@ export default function Home({ products }) {
             ))}
           </div>
 
-          {/* <RelatedProducts className="mb-2" /> */}
+          <RelatedProducts className="mb-2" />
         </Wrapper>
       </main>
     </>

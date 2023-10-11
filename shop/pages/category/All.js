@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import LazyLoad from "react-lazyload";
 import axios from "../api/axios";
 import ProductCard from "@/components/ProductCard";
 import Wrapper from "@/components/Wrapper";
 import Head from "next/head";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+
 export default function All({ products }) {
   const [categories, setCategories] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState("All");
   const [selectedSortOption, setSelectedSortOption] = useState("Default");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -26,53 +29,59 @@ export default function All({ products }) {
       }
     };
     fetchData();
-  }, []);
-  const handlePriceRangeChange = (event) => {
-    const selectedPriceRange = event.target.value;
-    setSelectedPriceRange(selectedPriceRange);
+  }, [products.data.records]);
 
-    let filteredByCategory = [];
-    if (selectedCategory === "All") {
-      filteredByCategory = products.data.records;
-    } else {
-      filteredByCategory = products.data.records.filter((product) =>
-        product.Categories.some(
-          (category) => category.name === selectedCategory
-        )
-      );
-    }
+  const handlePriceRangeChange = useCallback(
+    (event) => {
+      const selectedPriceRange = event.target.value;
+      setSelectedPriceRange(selectedPriceRange);
 
-    let filteredByCategoryAndPriceRange = filteredByCategory;
-    if (selectedPriceRange !== "All") {
-      if (selectedPriceRange === "option1") {
-        filteredByCategoryAndPriceRange = filteredByCategory.filter(
-          (product) =>
-            product.current_price >= 0 && product.current_price <= 1000000
-        );
-      } else if (selectedPriceRange === "option2") {
-        filteredByCategoryAndPriceRange = filteredByCategory.filter(
-          (product) =>
-            product.current_price >= 1000000 && product.current_price <= 2000000
-        );
-      } else if (selectedPriceRange === "option3") {
-        filteredByCategoryAndPriceRange = filteredByCategory.filter(
-          (product) =>
-            product.current_price >= 2000000 && product.current_price <= 3000000
-        );
-      } else if (selectedPriceRange === "option4") {
-        filteredByCategoryAndPriceRange = filteredByCategory.filter(
-          (product) =>
-            product.current_price > 3000000 && product.current_price < 4000000
-        );
-      } else if (selectedPriceRange === "> 4.000.000") {
-        filteredByCategoryAndPriceRange = filteredByCategory.filter(
-          (product) => product.current_price > 4000000
+      let filteredByCategory = [];
+      if (selectedCategory === "All") {
+        filteredByCategory = products.data.records;
+      } else {
+        filteredByCategory = products.data.records.filter((product) =>
+          product.Categories.some(
+            (category) => category.name === selectedCategory
+          )
         );
       }
-    }
 
-    setFilteredProducts(filteredByCategoryAndPriceRange);
-  };
+      let filteredByCategoryAndPriceRange = filteredByCategory;
+      if (selectedPriceRange !== "All") {
+        if (selectedPriceRange === "option1") {
+          filteredByCategoryAndPriceRange = filteredByCategory.filter(
+            (product) =>
+              product.current_price >= 0 && product.current_price <= 1000000
+          );
+        } else if (selectedPriceRange === "option2") {
+          filteredByCategoryAndPriceRange = filteredByCategory.filter(
+            (product) =>
+              product.current_price >= 1000000 &&
+              product.current_price <= 2000000
+          );
+        } else if (selectedPriceRange === "option3") {
+          filteredByCategoryAndPriceRange = filteredByCategory.filter(
+            (product) =>
+              product.current_price >= 2000000 &&
+              product.current_price <= 3000000
+          );
+        } else if (selectedPriceRange === "option4") {
+          filteredByCategoryAndPriceRange = filteredByCategory.filter(
+            (product) =>
+              product.current_price > 3000000 && product.current_price < 4000000
+          );
+        } else if (selectedPriceRange === "> 4.000.000") {
+          filteredByCategoryAndPriceRange = filteredByCategory.filter(
+            (product) => product.current_price > 4000000
+          );
+        }
+      }
+
+      setFilteredProducts(filteredByCategoryAndPriceRange);
+    },
+    [selectedCategory, products.data.records]
+  );
 
   const truncateText = (text, maxLength) => {
     if (text.length <= maxLength) {
@@ -80,72 +89,80 @@ export default function All({ products }) {
     }
     return text.substring(0, maxLength) + "...";
   };
-  const handleSortOptionChange = (event) => {
-    const selectedSortOption = event.target.value;
-    setSelectedSortOption(selectedSortOption);
 
-    let sortedProducts = [...filteredProducts];
-    if (selectedSortOption === "PriceLowToHigh") {
-      sortedProducts.sort((a, b) => a.current_price - b.current_price);
-    } else if (selectedSortOption === "PriceHighToLow") {
-      sortedProducts.sort((a, b) => b.current_price - a.current_price);
-    } else if (selectedSortOption === "A-Z") {
-      sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (selectedSortOption === "Z-A") {
-      sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
-    }
+  const handleSortOptionChange = useCallback(
+    (event) => {
+      const selectedSortOption = event.target.value;
+      setSelectedSortOption(selectedSortOption);
 
-    setFilteredProducts(sortedProducts);
-  };
-  const handleCategoryChange = (event) => {
-    const selectedCategory = event.target.value;
-    setSelectedCategory(selectedCategory);
-
-    const filteredByCategory =
-      selectedCategory === "All"
-        ? products.data.records
-        : products.data.records.filter((product) =>
-            product.Categories.some(
-              (category) => category.name === selectedCategory
-            )
-          );
-
-    let filteredByCategoryAndPriceRange = filteredByCategory;
-    if (selectedPriceRange !== "All") {
-      if (selectedPriceRange === "option1") {
-        filteredByCategoryAndPriceRange =
-          filteredByCategoryAndPriceRange.filter(
-            (product) =>
-              product.current_price >= 0 && product.current_price <= 1000000
-          );
-      } else if (selectedPriceRange === "option2") {
-        filteredByCategoryAndPriceRange =
-          filteredByCategoryAndPriceRange.filter(
-            (product) =>
-              product.current_price >= 1000000 &&
-              product.current_price <= 2000000
-          );
-      } else if (selectedPriceRange === "option3") {
-        filteredByCategoryAndPriceRange =
-          filteredByCategoryAndPriceRange.filter(
-            (product) =>
-              product.current_price >= 2000000 &&
-              product.current_price <= 3000000
-          );
-      } else if (selectedPriceRange === "option4") {
-        filteredByCategoryAndPriceRange = filteredByCategory.filter(
-          (product) =>
-            product.current_price > 3000000 && product.current_price < 4000000
-        );
-      } else if (selectedPriceRange === "> 4.000.000") {
-        filteredByCategoryAndPriceRange = filteredByCategory.filter(
-          (product) => product.current_price > 4000000
-        );
+      let sortedProducts = [...filteredProducts];
+      if (selectedSortOption === "PriceLowToHigh") {
+        sortedProducts.sort((a, b) => a.current_price - b.current_price);
+      } else if (selectedSortOption === "PriceHighToLow") {
+        sortedProducts.sort((a, b) => b.current_price - a.current_price);
+      } else if (selectedSortOption === "A-Z") {
+        sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (selectedSortOption === "Z-A") {
+        sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
       }
-    }
 
-    setFilteredProducts(filteredByCategoryAndPriceRange);
-  };
+      setFilteredProducts(sortedProducts);
+    },
+    [filteredProducts, selectedSortOption]
+  );
+
+  const handleCategoryChange = useCallback(
+    (event) => {
+      const selectedCategory = event.target.value;
+      setSelectedCategory(selectedCategory);
+
+      const filteredByCategory =
+        selectedCategory === "All"
+          ? products.data.records
+          : products.data.records.filter((product) =>
+              product.Categories.some(
+                (category) => category.name === selectedCategory
+              )
+            );
+
+      let filteredByCategoryAndPriceRange = filteredByCategory;
+      if (selectedPriceRange !== "All") {
+        if (selectedPriceRange === "option1") {
+          filteredByCategoryAndPriceRange =
+            filteredByCategoryAndPriceRange.filter(
+              (product) =>
+                product.current_price >= 0 && product.current_price <= 1000000
+            );
+        } else if (selectedPriceRange === "option2") {
+          filteredByCategoryAndPriceRange =
+            filteredByCategoryAndPriceRange.filter(
+              (product) =>
+                product.current_price >= 1000000 &&
+                product.current_price <= 2000000
+            );
+        } else if (selectedPriceRange === "option3") {
+          filteredByCategoryAndPriceRange =
+            filteredByCategoryAndPriceRange.filter(
+              (product) =>
+                product.current_price >= 2000000 &&
+                product.current_price <= 3000000
+            );
+        } else if (selectedPriceRange === "option4") {
+          filteredByCategoryAndPriceRange = filteredByCategory.filter(
+            (product) =>
+              product.current_price > 3000000 && product.current_price < 4000000
+          );
+        } else if (selectedPriceRange === "> 4.000.000") {
+          filteredByCategoryAndPriceRange = filteredByCategory.filter(
+            (product) => product.current_price > 4000000
+          );
+        }
+      }
+
+      setFilteredProducts(filteredByCategoryAndPriceRange);
+    },
+    [selectedCategory, selectedPriceRange, products.data.records]
+  );
 
   return (
     <div className="flex min-h-screen">
@@ -190,7 +207,6 @@ export default function All({ products }) {
                 <MenuItem value="All">All</MenuItem>
                 <MenuItem value="option1">0 - 1.000.000</MenuItem>
                 <MenuItem value="option2">1.000.000 - 2.000.000</MenuItem>
-
                 <MenuItem value="option3">2.000.000 - 3.000.000</MenuItem>
                 <MenuItem value="option4">3.000.000 - 4.000.000</MenuItem>
                 <MenuItem value="> 4.000.000">{"> 4.000.000"}</MenuItem>
@@ -220,8 +236,15 @@ export default function All({ products }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-14 px-5 md:px-0">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} data={product} />
+          {filteredProducts?.map((product) => (
+            <LazyLoad
+              key={product.id}
+              height={200}
+              offset={100}
+              className="transform overflow-hidden bg-white duration-200 hover:scale-105 cursor-pointer"
+            >
+              <ProductCard data={product} />
+            </LazyLoad>
           ))}
         </div>
       </Wrapper>

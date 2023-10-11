@@ -142,7 +142,7 @@ const ProductDetails = ({ productData }) => {
           </div>
           {/* right column end */}
         </div>
-
+        <RelatedProducts className="mb-2" />
         {/* <RelatedProducts /> */}
       </Wrapper>
     </div>
