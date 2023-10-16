@@ -10,6 +10,7 @@ import { getDiscountedPricePercentage } from "@/utils/helper";
 import { addToCart } from "@/store/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Rating from "@/components/Rating";
 
 const ProductDetails = ({ productData }) => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const ProductDetails = ({ productData }) => {
   const [showError, setShowError] = useState(false);
   const p = productData?.data?.records?.product;
   const s = productData?.data?.records?.variants;
+  const slug = productData?.data?.records.product.id;
   const mutableArr = [...s];
   return (
     <div className="w-full md:py-5 ">
@@ -55,7 +57,7 @@ const ProductDetails = ({ productData }) => {
             </div>
             {/* product price */}
             <div className="flex items-center">
-              <p className="mr-2 text-lg font-semibold">
+              <p className="mr-2 text-2xl font-semibold">
                 {p?.current_price.toLocaleString("vi-VN") + " VND"}
               </p>
               {p?.original_price && (
@@ -73,6 +75,7 @@ const ProductDetails = ({ productData }) => {
                 </>
               )}
             </div>
+            <Rating slug={slug} />
             {/* product size start */}
             <div className="my-5">
               <div className="flex justify-between mb-5">
@@ -142,8 +145,7 @@ const ProductDetails = ({ productData }) => {
           </div>
           {/* right column end */}
         </div>
-        <RelatedProducts className="mb-2" />
-        {/* <RelatedProducts /> */}
+        <RelatedProducts className="mb-2" slug={slug} />
       </Wrapper>
     </div>
   );

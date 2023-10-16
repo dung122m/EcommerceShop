@@ -40,14 +40,14 @@ export default function Home({ products }) {
             ))}
           </div>
 
-          <RelatedProducts className="mb-2" />
+          {/* <RelatedProducts className="mb-2" /> */}
         </Wrapper>
       </main>
     </>
   );
 }
 export async function getStaticProps() {
-  const response = await axios.get("/products?limit=1000");
+  const response = await axios.get("/products?limit=12");
   return {
     props: {
       products: response.data,

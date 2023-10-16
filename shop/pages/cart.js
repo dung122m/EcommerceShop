@@ -19,7 +19,7 @@ const Cart = () => {
 
   const dispatch = useDispatch();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [linkHref, setLinkHref] = useState("");
+  // const [linkHref, setLinkHref] = useState("");
 
   const handleCheckOut = () => {
     if (isProcessing) return;

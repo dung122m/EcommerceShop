@@ -7,9 +7,11 @@ export const cartSlice = createSlice({
   },
   reducers: {
     addToCart: (state, action) => {
+      const size = action.payload.size;
       const item = state.cartItems.find(
-        (p) => p.product.id === action.payload.product.id
+        (p) => p.product.id === action.payload.product.id && p.size === size
       );
+
       if (item) {
         item.quantity++;
         item.product.current_price = item.oneQuantityPrice * item.quantity;
@@ -17,6 +19,7 @@ export const cartSlice = createSlice({
         state.cartItems.push({ ...action.payload, quantity: 1 });
       }
     },
+
     updateCart: (state, action) => {
       state.cartItems = state.cartItems.map((p) => {
         if (p.product.id === action.payload.id) {

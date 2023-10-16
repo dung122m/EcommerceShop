@@ -41,7 +41,6 @@ const Profile = () => {
           firstName: response.data.data?.first_name || "",
           lastName: response.data.data?.last_name || "",
           password: response.data.data?.password || "",
-          address: response.data.data?.address || "",
           phoneNumber: response.data.data?.phone_number || "",
         });
       })
@@ -56,45 +55,30 @@ const Profile = () => {
 
   const handleSaveClick = async () => {
     try {
-      // Create a request body with the updated data from formData
+      // Tạo một đối tượng chứa các thông tin cần cập nhật từ formData
       const updatedData = {
         first_name: formData.firstName,
         last_name: formData.lastName,
         password: formData.password,
-        address: formData.address,
         phone_number: formData.phoneNumber,
       };
 
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-      myHeaders.append("Authorization", `Bearer ${accessToken}`);
+      // Gửi yêu cầu PUT để cập nhật thông tin người dùng
+      const response = await axios.put(apiUrl, updatedData, { headers });
 
-      const requestOptions = {
-        method: "PUT",
-        headers: myHeaders,
-        body: JSON.stringify(updatedData),
-      };
+      // Kiểm tra nếu cập nhật thành công (response status code là 200)
+      if (response.status === 200) {
+        // Gọi lại API để lấy thông tin người dùng sau khi cập nhật
+        const updatedResponse = await axios.get(apiUrl, { headers });
+        setData(updatedResponse.data);
 
-      const response = await fetch(apiUrl, requestOptions);
-
-      if (response.ok) {
-        // Update the UI with the updated user data
-        const updatedUser = await response.json();
-        setData((prevData) => ({
-          ...prevData,
-          data: {
-            ...prevData.data,
-            ...updatedUser,
-          },
-        }));
-
-        // Exit the editing mode
+        // Chuyển người dùng ra khỏi chế độ chỉnh sửa
         setIsEditing(false);
       } else {
-        console.error("Error updating user:", response.text());
+        console.error("Cập nhật thông tin không thành công.");
       }
     } catch (error) {
-      console.error("Error updating user:", error);
+      console.error("Lỗi khi cập nhật thông tin người dùng:", error);
     }
   };
 
@@ -124,13 +108,13 @@ const Profile = () => {
               {isEditing ? (
                 <button onClick={handleSaveClick}>Save</button>
               ) : (
-                <button onClick={handleEditClick}>Edit</button>
+                <button onClick={handleEditClick}>Edit Profile</button>
               )}
             </div>
             {isEditing ? (
               <div className="mt-3 flex flex-col justify-center items-center">
                 <h2 className="text-center mt-2 text-xl font-bold">
-                  Edit User Information
+                  Edit Profile
                 </h2>
                 <form className="mt-5">
                   <div className="form-group">
@@ -183,23 +167,7 @@ const Profile = () => {
                       className="border border-gray-400 p-2 rounded-md pr-10"
                     />
                   </div>
-                  <div className="form-group">
-                    <label
-                      htmlFor="address"
-                      className=" text-gray-700 font-bold mb-2 flex items-center 
-                  gap-2"
-                    >
-                      Address:
-                    </label>
-                    <input
-                      type="text"
-                      id="address"
-                      name="address"
-                      value={formData.address}
-                      className="border border-gray-400 p-2 rounded-md pr-10"
-                      onChange={handleInputChange}
-                    />
-                  </div>
+
                   <div className="form-group">
                     <label
                       htmlFor="phoneNumber"

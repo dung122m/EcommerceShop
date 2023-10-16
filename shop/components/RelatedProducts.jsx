@@ -1,9 +1,11 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import axios from "@/pages/api/axios";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ProductCard from "./ProductCard";
-const RelatedProducts = ({ products }) => {
+const RelatedProducts = ({ slug }) => {
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  useEffect(() => {}, [slug]);
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -30,7 +32,7 @@ const RelatedProducts = ({ products }) => {
         <ProductCard />
         <ProductCard />
         <ProductCard />
-        <ProductCard /> 
+        <ProductCard />
         <ProductCard />
         <ProductCard />
       </Carousel>

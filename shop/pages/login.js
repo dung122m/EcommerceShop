@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { useContext } from "react";
 import { useRouter } from "next/router";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,7 +10,7 @@ import { AiOutlineCheck } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
 import axios from "./api/axios";
 import { useDispatch } from "react-redux";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -49,6 +49,7 @@ export default function LoginPage() {
           password: password,
         });
         const response = await axios.post("/admins/login", dataAdmin);
+        const accessAdmin = response.data.data.access_token;
         localStorage.setItem("accessAdmin", response.data.data.access_token);
         toast.success("Login successful");
         setTimeout(() => {

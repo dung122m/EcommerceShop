@@ -14,6 +14,12 @@ const CartItem = ({ data }) => {
       val: key === "quantity" ? parseInt(e.target.value) : e.target.value,
       id: data?.product?.id,
     };
+    if (key === "selectedSize") {
+      const selectedProduct = data.variants.find(
+        (variant) => variant.size === e.target.value
+      );
+      payload.id = selectedProduct.product.id;
+    }
     dispatch(updateCart(payload));
   };
 

@@ -38,6 +38,7 @@ const Index = () => {
       console.log("error", error);
     }
   };
+
   useEffect(() => {
     fetchUsers(currentPage);
   }, [currentPage]);
