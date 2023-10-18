@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { FiUser } from "react-icons/fi";
 import { resetCart } from "../store/cartSlice";
+// import axios from "@/pages/api/axios";
+import Cookies from "js-cookie";
 
 const Subhead = () => {
   const [isLoggedIn, setisLoggedIn] = useState(false);
@@ -11,19 +13,42 @@ const Subhead = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
+  const createGuestSession = () => {
+    const axios = require("axios");
 
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:8080/api/v2/users/guests",
+      headers: {},
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data.data.session_id);
+        // Cookies.set("session_id", response.data.data.session_id);
+        localStorage.setItem("session_id", response.data.data.session_id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   useEffect(() => {
     // Perform localStorage action
     const accessToken = localStorage.getItem("access_token");
     const name = localStorage.getItem("name");
+    const guestSessionId = localStorage.getItem("session_id");
+
     if (accessToken) {
       setisLoggedIn(true);
       setName(name);
-    } else {
-      setisLoggedIn(false);
+    } else if (!guestSessionId) {
+      // Guest session doesn't exist, create a new one
+      createGuestSession();
     }
   }, []);
-
+  // console.log(Cookies.get("guestSession"));
   function logout() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("name");
@@ -32,10 +57,11 @@ const Subhead = () => {
     localStorage.removeItem("userCart");
     localStorage.removeItem("results");
     setisLoggedIn(false);
+    createGuestSession();
     dispatch(resetCart());
     router.push("/");
   }
-
+  // console.log(localStorage.getItem("session_id"));
   return (
     <div className="w-full flex justify-center md:justify-end mr-10 pt-2 text-lg ">
       <ul className="flex gap-5  text-xs items-end font-bold  ">

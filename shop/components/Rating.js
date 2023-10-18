@@ -12,9 +12,8 @@ const Rating = ({ slug }) => {
 
   const handleRatingChange = (newRating) => {
     setRating(newRating);
-
     axios
-      .post(`products/${slug}/rate`, { rate: rating }, { headers: headers })
+      .post(`products/${slug}/rate`, { rate: newRating }, { headers: headers })
       .then((response) => {
         toast.success("Success!");
       })
@@ -43,6 +42,7 @@ const Rating = ({ slug }) => {
           </button>
         ))}
       </div>
+      {/* {rating} */}
     </div>
   );
 };

@@ -5,12 +5,14 @@ import Wrapper from "@/components/Wrapper";
 
 import { Inter } from "@next/font/google";
 import axios from "./api/axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import Cookies from "js-cookie";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home({ products }) {
   const dispatch = useDispatch();
+  // const [isUserLoggedIn, setUserLoggedIn] = useState(false);
   useEffect(() => {
     const userId = localStorage.getItem("user_id");
     if (userId) {
