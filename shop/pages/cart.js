@@ -19,7 +19,7 @@ const Cart = () => {
 
   const dispatch = useDispatch();
   const [isProcessing, setIsProcessing] = useState(false);
-  // const [linkHref, setLinkHref] = useState("");
+  const [linkHref, setLinkHref] = useState("");
 
   const handleCheckOut = () => {
     if (isProcessing) return;
@@ -51,7 +51,6 @@ const Cart = () => {
         setIsProcessing(false);
         if (access_token) {
           window.location.href = newLinkHref;
-          dispatch(resetCart());
         }
       })
       .catch((error) => {
@@ -90,13 +89,21 @@ const Cart = () => {
                   </div>
                 </div>
                 {accessToken ? (
-                  <button
-                    className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75"
-                    onClick={() => handleCheckOut()}
-                    disabled={isProcessing}
+                  <Link
+                    href={{
+                      pathname: "/checkout",
+                      query: { cartItems: JSON.stringify(cartItems) },
+                    }}
                   >
-                    {isProcessing ? "Processing..." : "Check Out"}
-                  </button>
+                    <button
+                      className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75"
+                      // onClick={() => handleCheckOut()}
+                      // disabled={isProcessing}
+                      // /isProcessing ? "Processing..." :
+                    >
+                      Check Out
+                    </button>
+                  </Link>
                 ) : (
                   <Link href="/login">
                     <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75">

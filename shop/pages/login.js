@@ -50,6 +50,7 @@ export default function LoginPage() {
         });
         const response = await axios.post("/admins/login", dataAdmin);
         const accessAdmin = response.data.data.access_token;
+
         localStorage.setItem("accessAdmin", response.data.data.access_token);
         toast.success("Login successful");
         setTimeout(() => {
@@ -59,10 +60,7 @@ export default function LoginPage() {
         const response = await axios.post("/auth/login", data); // Gọi API đăng nhập
         const accessToken = response?.data?.data?.access_token;
         localStorage.setItem("access_token", accessToken);
-        localStorage.setItem(
-          "name",
-          `${response?.data?.data?.user.first_name} ${response?.data?.data?.user.last_name}`
-        );
+
         localStorage.setItem("id", response?.data?.data?.user.id);
         toast.success("Login successful");
         setTimeout(() => {

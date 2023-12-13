@@ -1,7 +1,8 @@
-import LayoutAdmin from "@/components/LayoutAdmin";
+import LayoutAdmin from "@/components/Admin/LayoutAdmin";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
+import Dashboard from "@/components/Admin/Dashboard";
 const admin = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
@@ -28,7 +29,11 @@ const admin = () => {
     }
   }, []);
 
-  return <LayoutAdmin>Hello Admin </LayoutAdmin>;
+  return (
+    <LayoutAdmin>
+      <Dashboard />
+    </LayoutAdmin>
+  );
 };
 
 export default admin;

@@ -9,11 +9,17 @@ const Rating = ({ slug }) => {
   const headers = {
     Authorization: `Bearer ${token}`,
   };
-
+  const guestSessionId = localStorage.getItem("session_id");
   const handleRatingChange = (newRating) => {
     setRating(newRating);
+    const postUrl = guestSessionId
+      ? `products/${slug}/rate/guest`
+      : `products/${slug}/rate`;
+    const postData = guestSessionId
+      ? { rate: newRating, session_id: guestSessionId }
+      : { rate: newRating };
     axios
-      .post(`products/${slug}/rate`, { rate: newRating }, { headers: headers })
+      .post(postUrl, postData, { headers: headers })
       .then((response) => {
         toast.success("Success!");
       })

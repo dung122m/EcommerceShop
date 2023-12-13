@@ -1,8 +1,11 @@
-import LayoutAdmin from "@/components/LayoutAdmin";
+import LayoutAdmin from "@/components/Admin/LayoutAdmin";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-
+import { MdDeleteOutline } from "react-icons/md";
+import { CiEdit } from "react-icons/ci";
+import { FaRegWindowClose, FaSave } from "react-icons/fa";
+import { IoIosAddCircleOutline } from "react-icons/io";
 const Index = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -83,12 +86,10 @@ const Index = () => {
       if (response.ok) {
         const newUser = await response.json();
         setUsers([...users, newUser.data]);
-
         setAddFormData({
           first_name: "",
           last_name: "",
           email: "",
-          address: "",
           phone_number: "",
         });
       } else {
@@ -132,7 +133,6 @@ const Index = () => {
           first_name: "",
           last_name: "",
           email: "",
-          address: "",
           phone_number: "",
         });
       } else {
@@ -162,7 +162,6 @@ const Index = () => {
       first_name: user.first_name,
       last_name: user.last_name,
 
-      address: user.address,
       phone_number: user.phone_number,
     });
     setEditingUserId(user.id);
@@ -233,10 +232,10 @@ const Index = () => {
                   {" "}
                   {!isFormVisible && (
                     <button
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded mb-4"
                       onClick={handleAddButtonClick}
                     >
-                      Add
+                      <IoIosAddCircleOutline />
                     </button>
                   )}
                 </th>
@@ -316,15 +315,15 @@ const Index = () => {
                       <div>
                         <button
                           onClick={() => handleSaveEdit(user.id)}
-                          className="bg-blue-500 text-white px-2 py-1 rounded-md"
+                          className="text-blue-500 px-2 py-1 rounded-md ml-2"
                         >
-                          Save
+                          <FaSave />
                         </button>
                         <button
                           onClick={() => setEditingUserId(null)}
                           className="bg-gray-300 text-gray-800 px-2 py-1 rounded-md ml-2"
                         >
-                          Cancel
+                          <FaRegWindowClose />
                         </button>
                       </div>
                     ) : (
@@ -333,13 +332,13 @@ const Index = () => {
                           className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2"
                           onClick={() => handleEditClick(user)}
                         >
-                          Edit
+                          <CiEdit />
                         </button>
                         <button
                           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                           onClick={() => handleDeleteUser(user.id)}
                         >
-                          Delete
+                          <MdDeleteOutline />
                         </button>
                       </div>
                     )}

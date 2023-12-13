@@ -1,4 +1,4 @@
-import LayoutAdmin from "@/components/Admin/LayoutAdmin";
+import LayoutShipper from "@/components/Shipper/LayoutShipper";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
@@ -47,9 +47,9 @@ const Index = () => {
   };
 
   return (
-    <LayoutAdmin>
+    <LayoutShipper>
       <Head>
-        <title>Products Management</title>
+        <title>Orders Management</title>
       </Head>
       {isLoading ? (
         <div>Loading...</div>
@@ -66,10 +66,16 @@ const Index = () => {
                 </th>
 
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Current Price
+                  Name User
                 </th>
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Original Price
+                  Address
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Phone Number
                 </th>
               </tr>
             </thead>
@@ -111,7 +117,7 @@ const Index = () => {
           </div>
         </div>
       )}
-    </LayoutAdmin>
+    </LayoutShipper>
   );
 };
 

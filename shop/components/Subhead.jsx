@@ -6,6 +6,7 @@ import { FiUser } from "react-icons/fi";
 import { resetCart } from "../store/cartSlice";
 // import axios from "@/pages/api/axios";
 import Cookies from "js-cookie";
+import { fetchData } from "@/utils/getUserInfo";
 
 const Subhead = () => {
   const [isLoggedIn, setisLoggedIn] = useState(false);
@@ -26,7 +27,6 @@ const Subhead = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(response.data.data.session_id);
         // Cookies.set("session_id", response.data.data.session_id);
         localStorage.setItem("session_id", response.data.data.session_id);
       })
@@ -37,16 +37,30 @@ const Subhead = () => {
   useEffect(() => {
     // Perform localStorage action
     const accessToken = localStorage.getItem("access_token");
-    const name = localStorage.getItem("name");
     const guestSessionId = localStorage.getItem("session_id");
 
     if (accessToken) {
       setisLoggedIn(true);
+      localStorage.removeItem("session_id");
       setName(name);
     } else if (!guestSessionId) {
       // Guest session doesn't exist, create a new one
       createGuestSession();
     }
+  }, []);
+  useEffect(() => {
+    const fetchDataFromAPI = async () => {
+      try {
+        const data = await fetchData();
+
+        setName(data.first_name + " " + data.last_name);
+
+        // Thực hiện các xử lý với dữ liệu từ API
+      } catch (error) {
+        console.error("Error fetching data in AnotherPage:", error);
+      }
+    };
+    fetchDataFromAPI();
   }, []);
   // console.log(Cookies.get("guestSession"));
   function logout() {
