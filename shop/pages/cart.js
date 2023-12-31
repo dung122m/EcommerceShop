@@ -27,36 +27,6 @@ const Cart = () => {
     setIsProcessing(true);
 
     const access_token = localStorage.getItem("access_token");
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${access_token}`);
-    var raw = JSON.stringify({
-      total_order_amount: cartItems.length,
-      price: total,
-    });
-
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch("http://localhost:8080/api/v2/orders/vnpay", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        const href = result.data;
-        const newLinkHref = access_token ? `${href}` : "/login";
-        setLinkHref(newLinkHref);
-        setIsProcessing(false);
-        if (access_token) {
-          window.location.href = newLinkHref;
-        }
-      })
-      .catch((error) => {
-        console.log("error", error);
-        setIsProcessing(false);
-      });
   };
 
   return (
@@ -88,29 +58,17 @@ const Cart = () => {
                     <div>{total.toLocaleString("vi-VN") + " VND"}</div>
                   </div>
                 </div>
-                {accessToken ? (
-                  <Link
-                    href={{
-                      pathname: "/checkout",
-                      query: { cartItems: JSON.stringify(cartItems) },
-                    }}
-                  >
-                    <button
-                      className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75"
-                      // onClick={() => handleCheckOut()}
-                      // disabled={isProcessing}
-                      // /isProcessing ? "Processing..." :
-                    >
-                      Check Out
-                    </button>
-                  </Link>
-                ) : (
-                  <Link href="/login">
-                    <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75">
-                      Check Out
-                    </button>
-                  </Link>
-                )}
+
+                <Link
+                  href={{
+                    pathname: "/checkout",
+                    query: { cartItems: JSON.stringify(cartItems) },
+                  }}
+                >
+                  <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75">
+                    Check Out
+                  </button>
+                </Link>
               </div>
 
               {/* sumary end */}

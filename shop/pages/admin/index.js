@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import Dashboard from "@/components/Admin/Dashboard";
 const admin = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const checkAdminLoggedIn = (accessToken) => {
     try {
@@ -15,6 +16,8 @@ const admin = () => {
       }
     } catch (error) {
       console.error("Error decoding access token:", error);
+    } finally {
+      setIsLoading(false);
     }
 
     return false;
@@ -29,7 +32,9 @@ const admin = () => {
     }
   }, []);
 
-  return (
+  return isLoading ? (
+    <div>Loading...</div>
+  ) : (
     <LayoutAdmin>
       <Dashboard />
     </LayoutAdmin>

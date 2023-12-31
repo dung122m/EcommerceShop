@@ -21,14 +21,14 @@ const NavShipper = () => {
   const { pathname } = router;
   const handleLogout = () => {
     localStorage.removeItem("accessAdmin");
+    localStorage.removeItem("auth");
 
-    // Chuyển hướng về trang home
     router.push("/");
   };
   return (
     <aside className=" p-4 text-white pr-0">
       <Link
-        href="/admin"
+        href="/shipper"
         className="flex gap-2 mb-4 font-bold text-lg items-center  text-yellow-300 mr-32 "
       >
         <RiAdminFill size={20} />
@@ -37,6 +37,13 @@ const NavShipper = () => {
 
       <nav className="flex flex-col gap-4 ">
         <Link
+          href={"/shipper"}
+          className={pathname == "/shipper" ? activeLink : inactiveLink}
+        >
+          <BsFillCartFill />
+          Dashboard
+        </Link>
+        <Link
           href={"/shipper/orders"}
           className={pathname.includes("/orders") ? activeLink : inactiveLink}
         >
@@ -44,14 +51,7 @@ const NavShipper = () => {
           Orders
         </Link>
         <Link
-          href={"/shipper/users"}
-          className={pathname.includes("/users") ? activeLink : inactiveLink}
-        >
-          <AiOutlineUser />
-          Users
-        </Link>
-        <Link
-          href={"/admin/settings"}
+          href={"/shipper/settings"}
           className={pathname.includes("/settings") ? activeLink : inactiveLink}
         >
           <AiFillSetting />

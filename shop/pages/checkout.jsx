@@ -13,12 +13,14 @@ const accessToken =
   typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
 const Checkout = () => {
   const router = useRouter();
+
   const dispatch = useDispatch();
   const [address, setAddress] = useState();
   const [name, setName] = useState();
   const [phone, setPhone] = useState();
   const [email, setEmail] = useState();
   const { cartItems } = router.query;
+  const [vnpayUrl, setVnpayUrl] = useState("");
   const parsedCartItems = JSON.parse(cartItems || "[]");
   const total = useMemo(() => {
     return parsedCartItems.reduce(
@@ -27,19 +29,89 @@ const Checkout = () => {
     );
   }, [cartItems]);
   const quantityArray = parsedCartItems.map((item) => {
-    // Find the variant based on selectedSize === size
     const selectedVariantId = item.variants.find(
       (variant) => variant.size === item.selectedSize
     )?.id;
 
     return {
       variant_id: selectedVariantId,
-
       quantity: item.quantity,
     };
   });
 
   const [paymentMethod, setPaymentMethod] = useState("COD");
+  const handleCheckOutGuest = () => {
+    if (paymentMethod === "COD") {
+      const axios = require("axios");
+      let data = JSON.stringify({
+        email: email,
+        phone_number: phone,
+        address: address,
+        payment_method_id: 1,
+        order: quantityArray,
+      });
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "http://localhost:8080/api/v2/orders/guest",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+      axios
+        .request(config)
+        .then((response) => {
+          if (response.data.status === 200) {
+            router.push("/success");
+            dispatch(resetCart());
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else if (paymentMethod === "VNPay") {
+      const axios = require("axios");
+      let data = JSON.stringify({
+        total_order_amount: total,
+
+        price: parsedCartItems.length,
+      });
+
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "http://localhost:8080/api/v2/orders/vnpay",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: data,
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          if (response.data.status === 200) {
+            window.location.href = response.data.data;
+
+            localStorage.setItem(
+              "dataOrder",
+              JSON.stringify({
+                email: email,
+                phone_number: phone,
+                address: address,
+                payment_method_id: 1,
+                order: quantityArray,
+              })
+            );
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
   const handleCheckOut = () => {
     if (paymentMethod === "COD") {
       const axios = require("axios");
@@ -72,25 +144,65 @@ const Checkout = () => {
         .catch((error) => {
           console.log(error);
         });
-      // Xử lý khi chọn COD
-      // ...
     } else if (paymentMethod === "VNPay") {
-      // Xử lý khi chọn VNPay
-      // ...
+      const axios = require("axios");
+      let data = JSON.stringify({
+        // total_order_amount: parsedCartItems.length,
+        total_order_amount: total,
+
+        price: parsedCartItems.length,
+      });
+
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "http://localhost:8080/api/v2/orders/vnpay",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: data,
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          if (response.data.status === 200) {
+            window.location.href = response.data.data;
+
+            localStorage.setItem(
+              "dataOrder",
+              JSON.stringify({
+                email: email,
+                phone_number: phone,
+                address: address,
+                payment_method_id: 1,
+                order: quantityArray,
+              })
+            );
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
   useEffect(() => {
     const fetchDataFromAPI = async () => {
       try {
+        if (!accessToken) {
+          setName("");
+          setPhone("");
+          setAddress("");
+          return;
+        }
         const data = await fetchData();
-
         setName(data.first_name + " " + data.last_name);
         setPhone(data.phone_number);
         setAddress(data.address);
         setEmail(data.email);
-        // Thực hiện các xử lý với dữ liệu từ API
       } catch (error) {
-        console.error("Error fetching data in AnotherPage:", error);
+        console.error(error);
       }
     };
     fetchDataFromAPI();
@@ -179,12 +291,21 @@ const Checkout = () => {
                     <option value="VNPay">VNPay</option>
                   </select>
                 </div>
-                <button
-                  className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75"
-                  onClick={handleCheckOut}
-                >
-                  Check Out
-                </button>
+                {accessToken ? (
+                  <button
+                    className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75"
+                    onClick={handleCheckOut}
+                  >
+                    Check Out
+                  </button>
+                ) : (
+                  <button
+                    className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75"
+                    onClick={handleCheckOutGuest}
+                  >
+                    Check Out
+                  </button>
+                )}
               </div>
             </div>
           </>

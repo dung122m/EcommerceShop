@@ -1,4 +1,5 @@
 import axios from "@/pages/api/axios";
+import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -9,7 +10,7 @@ const Rating = ({ slug }) => {
   const headers = {
     Authorization: `Bearer ${token}`,
   };
-  const guestSessionId = localStorage.getItem("session_id");
+  const guestSessionId = Cookies.get("session_id");
   const handleRatingChange = (newRating) => {
     setRating(newRating);
     const postUrl = guestSessionId

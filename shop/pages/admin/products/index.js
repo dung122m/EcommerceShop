@@ -1,4 +1,6 @@
+import { useGetProductsQuery } from "@/api/productApi";
 import LayoutAdmin from "@/components/Admin/LayoutAdmin";
+import Loading from "@/components/Loading";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
@@ -12,10 +14,7 @@ const Index = () => {
   const fetchUsers = async (page) => {
     try {
       const myHeaders = new Headers();
-      myHeaders.append(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImFkbWluX2lkIjoxLCJhZG1pbl9yb2xlIjoic3VwZXJhZG1pbiJ9LCJpYXQiOjE2ODU5NDIxMzgsImV4cCI6MTY4NjAyODUzOH0.BYTsuBL-kqgPH9M6YrY_K-zNREJLk641ybmM0GXq9Cs"
-      );
+      myHeaders.append("Authorization", localStorage.getItem("accessAdmin"));
 
       const requestOptions = {
         method: "GET",
@@ -52,7 +51,9 @@ const Index = () => {
         <title>Products Management</title>
       </Head>
       {isLoading ? (
-        <div>Loading...</div>
+        <div>
+          <Loading />
+        </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">

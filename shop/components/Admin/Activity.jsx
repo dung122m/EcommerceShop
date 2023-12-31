@@ -1,45 +1,16 @@
 import React from "react";
 import MainHeading from "./MainHeading";
 import { tr } from "date-fns/locale";
-const Transaction = [
-  {
-    id: 1,
-    receiver: "Dung Tran",
-    amount: "$10.000",
-    status: "Processing",
-    date: "12-2-2000",
-  },
-  {
-    id: 2,
-    receiver: "Dung Tran",
-    amount: "$222.222",
-    status: "Pending",
-    date: "24-1-2000",
-  },
-  {
-    id: 3,
-    receiver: "Dung Tran",
-    amount: "$10.000",
-    status: "Success",
-    date: "12-2-2000",
-  },
-  {
-    id: 4,
-    receiver: "Dung Tran",
-    amount: "$222.222",
-    status: "Pending",
-    date: "24-1-2000",
-  },
-];
+const Transaction = [];
 const Activity = () => {
   return (
     <div>
-      <MainHeading title="Recent Activity" />
+      <MainHeading title="Recent Order" />
       <div className="mt-4">
         <table className="table-auto flex flex-col divide-y-2">
           <thead className="px-6 py-2 bg-indigo-100">
             <tr className="text-gray-900 font-medium  text-sm grid grid-cols-5">
-              <td className="col-span-2">Transaction</td>
+              <td className="col-span-2">Order</td>
               <td className="grid justify-items-end ">Amount</td>
               <td className=" grid justify-items-center">Status</td>
               <td className=" grid justify-items-end">Date</td>

@@ -44,18 +44,18 @@ const NavAdmin = () => {
           Dashboard
         </Link>
         <Link
-          href={"/admin/products"}
-          className={pathname.includes("/products") ? activeLink : inactiveLink}
-        >
-          <GiConverseShoe />
-          Products
-        </Link>
-        <Link
           href={"/admin/orders"}
           className={pathname.includes("/orders") ? activeLink : inactiveLink}
         >
           <BsFillCartFill />
           Orders
+        </Link>
+        <Link
+          href={"/admin/products"}
+          className={pathname.includes("/products") ? activeLink : inactiveLink}
+        >
+          <GiConverseShoe />
+          Products
         </Link>
         <Link
           href={"/admin/users"}
@@ -69,7 +69,7 @@ const NavAdmin = () => {
           className={pathname.includes("/settings") ? activeLink : inactiveLink}
         >
           <AiFillSetting />
-          Settings
+          Create
         </Link>{" "}
         <button className="flex gap-2 items-center p-2" onClick={handleLogout}>
           <AiOutlinePoweroff />

@@ -27,8 +27,8 @@ const Subhead = () => {
     axios
       .request(config)
       .then((response) => {
-        // Cookies.set("session_id", response.data.data.session_id);
-        localStorage.setItem("session_id", response.data.data.session_id);
+        Cookies.set("session_id", response.data.data.session_id);
+        // localStorage.setItem("session_id", response.data.data.session_id);
       })
       .catch((error) => {
         console.log(error);
@@ -37,45 +37,45 @@ const Subhead = () => {
   useEffect(() => {
     // Perform localStorage action
     const accessToken = localStorage.getItem("access_token");
-    const guestSessionId = localStorage.getItem("session_id");
-
+    const guestSessionId = Cookies.get("session_id");
     if (accessToken) {
       setisLoggedIn(true);
       localStorage.removeItem("session_id");
       setName(name);
     } else if (!guestSessionId) {
-      // Guest session doesn't exist, create a new one
       createGuestSession();
     }
   }, []);
   useEffect(() => {
     const fetchDataFromAPI = async () => {
       try {
-        const data = await fetchData();
+        const accessToken = localStorage.getItem("access_token");
+        if (accessToken) {
+          const data = await fetchData();
 
-        setName(data.first_name + " " + data.last_name);
-
-        // Thực hiện các xử lý với dữ liệu từ API
+          setName(data.first_name + " " + data.last_name);
+        }
       } catch (error) {
         console.error("Error fetching data in AnotherPage:", error);
       }
     };
-    fetchDataFromAPI();
+    const accessToken = localStorage.getItem("access_token");
+    if (accessToken) {
+      fetchDataFromAPI();
+    }
   }, []);
-  // console.log(Cookies.get("guestSession"));
   function logout() {
     localStorage.removeItem("access_token");
+    localStorage.removeItem("accessAdmin");
     localStorage.removeItem("name");
     localStorage.removeItem("id");
     localStorage.removeItem("email");
     localStorage.removeItem("userCart");
     localStorage.removeItem("results");
     setisLoggedIn(false);
-    createGuestSession();
     dispatch(resetCart());
     router.push("/");
   }
-  // console.log(localStorage.getItem("session_id"));
   return (
     <div className="w-full flex justify-center md:justify-end mr-10 pt-2 text-lg ">
       <ul className="flex gap-5  text-xs items-end font-bold  ">

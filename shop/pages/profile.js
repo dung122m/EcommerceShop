@@ -3,7 +3,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import { AiOutlineUser } from "react-icons/ai";
 import Wrapper from "@/components/Wrapper";
-
+import { useRouter } from "next/router";
 const apiUrl = "http://localhost:8080/api/v2/users/self";
 const accessToken =
   typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
@@ -52,7 +52,7 @@ const Profile = () => {
   const handleEditClick = () => {
     setIsEditing(true);
   };
-
+  const router = useRouter();
   const handleSaveClick = async () => {
     try {
       // Tạo một đối tượng chứa các thông tin cần cập nhật từ formData
@@ -74,6 +74,7 @@ const Profile = () => {
 
         // Chuyển người dùng ra khỏi chế độ chỉnh sửa
         setIsEditing(false);
+        router.reload();
       } else {
         console.error("Cập nhật thông tin không thành công.");
       }

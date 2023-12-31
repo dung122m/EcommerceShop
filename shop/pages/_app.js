@@ -10,6 +10,7 @@ function App({ Component, pageProps, router }) {
   const isAdmin = router.pathname.startsWith(
     "/admin" || "/products" || "settings" || "orders"
   );
+
   const isShipper = router.pathname.startsWith("/shipper");
   if (isAdmin) {
     // Trang admin

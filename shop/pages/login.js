@@ -2,28 +2,24 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { useContext } from "react";
 import { useRouter } from "next/router";
-// import Cookies from "js-cookie";
+
 import { useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineCheck } from "react-icons/ai";
-import { FaTimes } from "react-icons/fa";
+import { FaEyeSlash, FaRegEye, FaTimes } from "react-icons/fa";
 import axios from "./api/axios";
 import { useDispatch } from "react-redux";
-// import jwt from "jsonwebtoken";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
+  const [showPassword, setShowPassword] = useState(false);
   const [validPwd, setValidPwd] = useState(false);
   const [validName, setValidName] = useState(false);
   const userRef = useRef();
-  const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{8,24}|^admin$/;
-  const EMAIL_REGEX =
-    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|^adminn$/;
+  const PWD_REGEX = /^[a-zA-Z].{3,}$/;
+  const EMAIL_REGEX = /^[a-zA-Z].{2,}$/;
   const router = useRouter();
   const dispatch = useDispatch();
   const handlePasswordChange = (event) => {
@@ -37,42 +33,65 @@ export default function LoginPage() {
   }, [email]);
   async function handleSubmit(e) {
     e.preventDefault();
-    const aceses = localStorage.getItem("accessAdmin");
+
     let data = JSON.stringify({
-      email: email,
+      username: email,
       password: password,
     });
+
     try {
-      if (email === "adminn") {
-        let dataAdmin = JSON.stringify({
-          username: email,
+      const adminResponse = await axios.post("/admins/login", data);
+
+      if (adminResponse.data?.data) {
+        localStorage.setItem(
+          "auth",
+          JSON.stringify(adminResponse.data.data.admin)
+        );
+        localStorage.setItem(
+          "accessAdmin",
+          adminResponse.data.data.access_token
+        );
+        toast.success("Login successful");
+        if (adminResponse.data?.data.admin.role === "shipper") {
+          router.push("/shipper/orders");
+        } else {
+          router.push("/admin");
+        }
+      } else {
+        // Handle unsuccessful admin login here
+        throw new Error("Login failed");
+      }
+    } catch (adminError) {
+      // Try user login if admin login fails
+      try {
+        const userResponse = await axios.post("/auth/login", {
+          email: email,
           password: password,
         });
-        const response = await axios.post("/admins/login", dataAdmin);
-        const accessAdmin = response.data.data.access_token;
 
-        localStorage.setItem("accessAdmin", response.data.data.access_token);
-        toast.success("Login successful");
-        setTimeout(() => {
-          router.push("/admin");
-        }, 1000);
-      } else {
-        const response = await axios.post("/auth/login", data); // Gọi API đăng nhập
-        const accessToken = response?.data?.data?.access_token;
-        localStorage.setItem("access_token", accessToken);
+        if (userResponse?.data?.data?.access_token) {
+          const accessToken = userResponse.data.data.access_token;
+          localStorage.setItem("access_token", accessToken);
+          localStorage.setItem("id", userResponse.data.data.user.id);
+          toast.success("Login successful");
+          setTimeout(() => {
+            router.push("/");
+            window.location.href = "/";
+          }, 500);
+        } else {
+          // Handle unsuccessful user login here
+          throw new Error("User login failed");
+        }
+      } catch (userError) {
+        console.log("User login error:", userError);
 
-        localStorage.setItem("id", response?.data?.data?.user.id);
-        toast.success("Login successful");
-        setTimeout(() => {
-          router.push("/");
-          window.location.href = "/";
-        }, 500);
+        // Handle the error from user login
+        if (userError?.response?.data?.message) {
+          toast.error(userError.response.data.message);
+        } else {
+          toast.error("User login failed");
+        }
       }
-    } catch (error) {
-      console.log(error);
-      if (error?.response?.data?.message)
-        toast.error(error?.response?.data?.message);
-      else toast.error(error?.response?.data?.error);
     }
   }
 
@@ -102,7 +121,7 @@ export default function LoginPage() {
             htmlFor="email"
             className=" text-gray-700 font-bold mb-2 flex items-center gap-2"
           >
-            Email:
+            Username
             <span className={validName ? "text-green-700 text-xl" : "hidden"}>
               <AiOutlineCheck />
             </span>
@@ -124,7 +143,7 @@ export default function LoginPage() {
             required
             aria-invalid={validName ? "false" : "true"}
             aria-describedby="uidnote"
-            placeholder="Email address"
+            placeholder="Username"
             className="w-full border border-gray-400 p-2 rounded-md"
           />
           <p
@@ -133,7 +152,7 @@ export default function LoginPage() {
               validName || !email ? "hidden" : "relative"
             } text-red-400 mt-2 text-sm`}
           >
-            Please enter a valid email address
+            Username must be at least 5 characters
           </p>
         </div>
         <div className="mb-4">
@@ -145,46 +164,52 @@ export default function LoginPage() {
             <span className={validPwd ? "text-green-700 text-xl" : "hidden"}>
               <AiOutlineCheck />
             </span>
-            <span
+            {/* <span
               className={
                 validPwd || !password ? "hidden" : "text-red-600 text-xl"
               }
             >
               <FaTimes />
-            </span>
+            </span> */}
           </label>
-          <input
-            type="password"
-            id="pwd"
-            ref={userRef}
-            autoComplete="off"
-            name="pwd"
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            aria-invalid={validPwd ? "false" : "true"}
-            aria-describedby="uidnote"
-            placeholder="Password"
-            className="w-full border border-gray-400 p-2 rounded-md"
-          />
-          <p
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="pwd"
+              ref={userRef}
+              autoComplete="off"
+              name="pwd"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              aria-invalid={validPwd ? "false" : "true"}
+              aria-describedby="uidnote"
+              placeholder="Password"
+              className="w-full border border-gray-400 p-2 rounded-md"
+            />
+            <span
+              className="absolute top-1/2 transform -translate-y-1/2 right-2 h-full flex items-center pr-2 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaRegEye /> : <FaEyeSlash />}
+            </span>
+          </div>
+          {/* <p
             id="uidnote"
             className={`${
               validPwd || !password ? "hidden" : "relative"
             } text-red-400 mt-2 text-sm`}
           >
             Password must be at least 8 characters <br />
-            Including at least 1 number and 1 letter.
-          </p>
+            
+          </p> */}
         </div>
         <div className="text-center text-xs text-black/[0.7] m-5">
           By logging in, you agree to Nike's Privacy Policy and Terms of Use.
         </div>
         <button
-          className={`${
-            !email || !password || !validName || !validPwd
-              ? "cursor-not-allowed opacity-50 w-full"
-              : " "
-          }" w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold active:scale-95  hover:opacity-75 transition-transform "`}
+          className={
+            " w-full bg-black text-white p-2 rounded-md active:opacity-75 font-bold active:scale-95  hover:opacity-75 transition-transform "
+          }
         >
           SIGN IN
         </button>

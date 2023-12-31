@@ -5,6 +5,7 @@ import ProductCard from "@/components/ProductCard";
 import Wrapper from "@/components/Wrapper";
 import Head from "next/head";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import ReactPaginate from "react-paginate";
 
 export default function All({ products }) {
   const [categories, setCategories] = useState(null);
@@ -12,6 +13,9 @@ export default function All({ products }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState("All");
   const [selectedSortOption, setSelectedSortOption] = useState("Default");
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const currentProduct = 9;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +27,9 @@ export default function All({ products }) {
         ];
         setCategories(sortedCategories);
         const initialFilteredProducts = products.data.records;
+        setTotalPages(
+          Math.ceil(initialFilteredProducts.length / currentProduct)
+        );
         setFilteredProducts(initialFilteredProducts);
       } catch (error) {
         console.log(error);
@@ -82,6 +89,10 @@ export default function All({ products }) {
     },
     [selectedCategory, products.data.records]
   );
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected + 1);
+  };
 
   const truncateText = (text, maxLength) => {
     if (text.length <= maxLength) {
@@ -235,17 +246,37 @@ export default function All({ products }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-14 px-5 md:px-0">
-          {filteredProducts?.map((product) => (
-            <LazyLoad
-              key={product.id}
-              height={200}
-              offset={100}
-              className="transform overflow-hidden bg-white duration-200 hover:scale-105 cursor-pointer"
-            >
-              <ProductCard data={product} />
-            </LazyLoad>
-          ))}
+        <div className="grid min-h-screen grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-14 px-5 md:px-0">
+          {filteredProducts
+            ?.slice(
+              currentProduct * (currentPage - 1),
+              currentPage * currentProduct
+            )
+            ?.map((product) => (
+              <LazyLoad
+                key={product.id}
+                height={200}
+                offset={100}
+                className="transform overflow-hidden bg-white duration-200 hover:scale-105 cursor-pointer"
+              >
+                <ProductCard data={product} />
+              </LazyLoad>
+            ))}
+        </div>
+
+        <div className="">
+          <div className="flex items-center justify-center  bottom-auto right-10 py-5">
+            <ReactPaginate
+              pageCount={totalPages}
+              onPageChange={handlePageChange}
+              containerClassName="flex justify-center mt-8 gap-5"
+              pageClassName="px-2 py-1 bg-gray-200 text-gray-800 rounded-md cursor-pointer hover:bg-gray-300"
+              previousClassName="px-2 py-1 bg-gray-200 text-gray-800 rounded-md cursor-pointer hover:bg-gray-300"
+              nextClassName="px-2 py-1 bg-gray-200 text-gray-800 rounded-md cursor-pointer hover:bg-gray-300"
+              activeClassName="bg-green-500 text-white"
+              disabledClassName="opacity-50 cursor-not-allowed"
+            />
+          </div>
         </div>
       </Wrapper>
     </div>
