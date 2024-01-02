@@ -4,6 +4,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ProductCard from "./ProductCard";
 import Cookies from "js-cookie";
+import { log } from "react-modal/lib/helpers/ariaAppHider";
 const RelatedProducts = ({ slug }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [relatedProductsCf, setRelatedProductsCf] = useState([]);
@@ -55,7 +56,7 @@ const RelatedProducts = ({ slug }) => {
     : useEffect(() => {
         const axios = require("axios");
         let data = JSON.stringify({
-          session_id: Cookies.get("session_id"),
+          session_id: "658634d8d3d8bc064f3834e3",
         });
 
         let config = {
@@ -72,6 +73,7 @@ const RelatedProducts = ({ slug }) => {
           .request(config)
           .then((response) => {
             setRelatedProductsCf(response.data.data);
+            console.log(response.data.data);
           })
           .catch((error) => {
             console.log(error);

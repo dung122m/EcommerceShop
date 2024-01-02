@@ -17,7 +17,7 @@ const Rating = ({ slug }) => {
       ? `products/${slug}/rate/guest`
       : `products/${slug}/rate`;
     const postData = guestSessionId
-      ? { rate: newRating, session_id: guestSessionId }
+      ? { rate: newRating, session_id: "658634d8d3d8bc064f3834e3" }
       : { rate: newRating };
     axios
       .post(postUrl, postData, { headers: headers })

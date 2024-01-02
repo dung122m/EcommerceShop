@@ -7,7 +7,36 @@ const formatCreatedAt = (createdAt) => {
   const formattedDate = dateObject.toLocaleString("vi-VN"); // Định dạng theo ngôn ngữ Việt Nam
   return formattedDate;
 };
+const handlePredictOrder = () => {
+  const axios = require("axios");
+  let data = JSON.stringify({
+    address:
+      "8 Nguyễn Văn Tráng, Phường Bến Thành, Quận 1, Thành phố Hồ Chí Minh",
+    total_order_amount: -100000000,
+    price: -1,
+    phone_number: "0862923597",
+    email: "eme296qwe09qe02u@gmail.com",
+  });
 
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: "http://localhost:8080/api/v2/orders/train",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  axios
+    .request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 const dataStatus = [
   "Awaiting pickup",
   "Preparing order",
@@ -68,14 +97,12 @@ const ProductModal = ({
       );
 
       if (resStatus.ok && resShipper.ok) {
-        alert("Status updated successfully");
         window.location.href = "/admin/orders";
       } else {
         console.log("Error updating status:", resStatus.text());
       }
     } catch (error) {
       console.log("error", error);
-      // window.location.href = "/admin/orders";
     }
   };
 
@@ -142,6 +169,7 @@ const ProductModal = ({
               ))}
             </select>
           </div>
+
           <div className="flex flex-row justify-center">
             <button
               className="  mt-4 mr-4 bg-red-500 px-2 py-1 text-white rounded-md"

@@ -12,18 +12,15 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [shippers, setShippers] = useState(null);
+  const [selectedProductDetails, setSelectedProductDetails] = useState(null);
   const accessAdmin =
     typeof window !== "undefined" ? localStorage.getItem("accessAdmin") : null;
+  const [orderPredictionResults, setOrderPredictionResults] = useState({}); // New state for order-specific prediction results
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [status, setStatus] = useState(null);
   const [shipperSelected, setShipperSelected] = useState(null);
-  const customStyles = {
-    content: {
-      width: "50%", // Set the width as needed
-      maxWidth: "500px", // Optionally set a maximum width
-      margin: "auto", // Center the modal horizontally
-    },
-  };
+  const [isPredicting, setIsPredicting] = useState(false); // New state for loading indicator
+
   const fetchUsers = async (page) => {
     try {
       const myHeaders = new Headers();
@@ -39,10 +36,8 @@ const Index = () => {
         `http://localhost:8080/api/v2/orders?page=${page}&limit=10&sort=desc&orderBy=createdAt`,
         requestOptions
       );
-
       const result = await response.json();
       const userData = result.data;
-
       setUsers(userData);
       setIsLoading(false);
       setTotalPages(userData?.metadata.total_pages);
@@ -52,6 +47,7 @@ const Index = () => {
         return (window.location.href = "/admin/orders");
     }
   };
+
   const fetchShippers = async (page) => {
     try {
       const myHeaders = new Headers();
@@ -76,6 +72,7 @@ const Index = () => {
       console.log("error", error);
     }
   };
+
   const fetchProductDetails = async (product) => {
     const axios = require("axios");
 
@@ -101,18 +98,58 @@ const Index = () => {
     setStatus(null);
     setShipperSelected(null);
   };
+
   useEffect(() => {
     fetchUsers(currentPage);
     fetchShippers(currentPage);
   }, [currentPage]);
+
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected + 1);
   };
 
   const [selectedProductId, setSelectedProductId] = useState(null);
+
   const handleViewProduct = (product) => {
     setSelectedProductId(product);
     setIsModalOpen(true);
+  };
+
+  const predictOrder = (user) => {
+    const axios = require("axios");
+    setIsPredicting(true);
+    let data = JSON.stringify({
+      address: user?.address,
+      total_order_amount: user?.total_order_amount,
+      price: user?.price,
+      phone_number: user?.phone_number,
+      email: user?.email,
+    });
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:8080/api/v2/orders/train",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        setOrderPredictionResults((prevResults) => ({
+          ...prevResults,
+          [user.id]: response.data.data.data,
+        }));
+
+        setIsPredicting(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsPredicting(false);
+      });
   };
 
   useEffect(() => {
@@ -131,6 +168,7 @@ const Index = () => {
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
+            {isPredicting && <div className="overlay">Predicting...</div>}
             <thead>
               <tr>
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -139,9 +177,11 @@ const Index = () => {
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Price
                 </th>
-
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Address
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Phone number
                 </th>
                 <th className=" bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Payment Method
@@ -154,6 +194,9 @@ const Index = () => {
                 </th>
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Action
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Prediction Result
                 </th>
               </tr>
             </thead>
@@ -170,11 +213,17 @@ const Index = () => {
                   <td className="px-2 py-3 whitespace-nowrap">
                     {user.price?.toLocaleString("vi-VN")}
                   </td>
-
                   <td className="px-2 py-3 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
                       <div className="text-sm text-gray-900">
                         {user.address}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-2 py-3 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      <div className="text-sm text-gray-900">
+                        {user.phone_number}
                       </div>
                     </div>
                   </td>
@@ -203,14 +252,34 @@ const Index = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="px-2 py-3 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap flex">
                     <button
-                      className="text-blue-500 flex items-center justify-center"
+                      className="text-blue-500  "
                       onClick={() => handleViewProduct(user)}
-                      style={{ height: "100%", width: "50%" }}
+                      style={{ marginRight: "20px" }}
                     >
                       <FaRegEye />
                     </button>
+                    <button
+                      className="text-blue-500 flex items-center justify-center"
+                      onClick={() => predictOrder(user)}
+                      style={{ height: "100%", width: "50%" }}
+                    >
+                      Predict order
+                    </button>
+                  </td>
+                  <td className="px-2 py-3 whitespace-nowrap text-center">
+                    <div className="text-sm text-gray-900">
+                      {orderPredictionResults[user.id] !== undefined && (
+                        <div>
+                          {orderPredictionResults[user.id] === 0 ? (
+                            <p>Real Order</p>
+                          ) : (
+                            <p>Fake Order</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -241,9 +310,9 @@ const Index = () => {
         shippers={shippers}
         setStatus={setStatus}
         style={{
-          width: "50%", // Set the width as needed
-          maxWidth: "500px", // Optionally set a maximum width
-          margin: "auto", // Center the modal horizontally
+          width: "50%",
+          maxWidth: "500px",
+          margin: "auto",
         }}
       />
     </LayoutAdmin>
